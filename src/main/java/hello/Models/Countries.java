@@ -1,6 +1,9 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name="countries")
@@ -11,6 +14,10 @@ public class Countries {
 
     @Column(name ="Name", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "country")
+    @JsonIgnore
+    private List<Offices> offices;
 
     public int getId() {
         return id;

@@ -1,6 +1,10 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.apache.catalina.User;
+
+import java.util.List;
 
 @Entity
 @Table(name="roles")
@@ -11,6 +15,10 @@ public class Roles {
 
     @Column(name = "Title", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
     private String title;
+
+    @OneToMany(mappedBy = "role")
+    @JsonIgnore
+    private List<Users> users;
 
     public int getId() {
         return id;

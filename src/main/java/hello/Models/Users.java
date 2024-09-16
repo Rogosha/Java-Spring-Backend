@@ -1,5 +1,6 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,8 +12,13 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="RoleID", nullable = false)
-    private Integer roleId;
+    @ManyToOne
+    @JoinColumn(name="RoleID", nullable = false)
+    private Roles role;
+
+    @OneToOne(mappedBy = "user")
+    //@JsonIgnore
+    private UsersInfo userInfo;
 
     @Column(nullable = false, length = 150, unique = true)
     private String email;
@@ -20,35 +26,40 @@ public class Users {
     @Column(nullable = false, length = 50)
     private String password;
 
-    @Column(name="Firstname", nullable = true, length = 50)
+    @Column(name="Firstname", length = 50)
     private String firstName;
 
     @Column(name="Lastname", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name="OfficeID", nullable = true)
-    private int officeId;
+    @ManyToOne
+    @JoinColumn(name="OfficeID")
+    private Offices office;
 
-    @Column(nullable = true)
+    @Column
     private LocalDate birthdate;
 
-    @Column(name="Active", nullable = true)
+    @Column(name="Active")
     private Boolean active;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Roles getRole() {
+        return role;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public void setRole(Roles role) {
+        this.role = role;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public Offices getOffice() {
+        return office;
+    }
+
+    public void setOffice(Offices office) {
+        this.office = office;
     }
 
     public String getEmail() {
@@ -83,14 +94,6 @@ public class Users {
         this.lastName = lastName;
     }
 
-    public int getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(int officeId) {
-        this.officeId = officeId;
-    }
-
     public LocalDate getBirthdate() {
         return birthdate;
     }
@@ -107,32 +110,13 @@ public class Users {
         this.active = active;
     }
 
-    public Users(Integer roleId,
-                 String email,
-                 String password,
-                 String firstName,
-                 String lastName,
-                 int officeId,
-                 LocalDate birthdate,
-                 Boolean active) {
-        this.roleId = roleId;
+    public Users(Roles role, String email, String password, String firstName, String lastName, Offices office, LocalDate birthdate, Boolean active) {
+        this.role = role;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.officeId = officeId;
-        this.birthdate = birthdate;
-        this.active = active;
-    }
-
-    public Users(int id, Integer roleId, String email, String password, String firstName, String lastName, int officeId, LocalDate birthdate, Boolean active) {
-        this.id = id;
-        this.roleId = roleId;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.officeId = officeId;
+        this.office = office;
         this.birthdate = birthdate;
         this.active = active;
     }

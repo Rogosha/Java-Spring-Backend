@@ -1,6 +1,9 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name="offices")
@@ -9,8 +12,13 @@ public class Offices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "CountryID", nullable = false)
-    private int countryId;
+    @ManyToOne
+    @JoinColumn(name = "CountryID", referencedColumnName = "id", nullable = false)
+    private Countries country;
+
+    @OneToMany(mappedBy = "office")
+    @JsonIgnore
+    private List<Users> users;
 
     @Column(name = "Title", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
     private String title;
@@ -30,12 +38,20 @@ public class Offices {
         this.id = id;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public Countries getCountry() {
+        return country;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setCountry(Countries country) {
+        this.country = country;
+    }
+
+    public List<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Users> users) {
+        this.users = users;
     }
 
     public String getTitle() {
@@ -65,8 +81,8 @@ public class Offices {
     public Offices() {
     }
 
-    public Offices(int countryId, String title, String phone, String contact) {
-        this.countryId = countryId;
+    public Offices(Countries country, String title, String phone, String contact) {
+        this.country = country;
         this.title = title;
         this.phone = phone;
         this.contact = contact;

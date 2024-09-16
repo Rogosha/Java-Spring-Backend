@@ -1,6 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.Offices;
+import hello.Repositories.CountriesRepository;
 import hello.Repositories.OfficesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,9 @@ public class OfficesController {
 
     @Autowired
     private OfficesRepository officesRepository;
+
+    @Autowired
+    private CountriesRepository countriesRepository;
 
     @GetMapping("/offices")
     public Iterable<Offices> getOffices() {
@@ -31,7 +35,7 @@ public class OfficesController {
             @RequestParam(name = "Phone") String phone,
             @RequestParam(name = "Contact") String contact) {
 
-        Offices office = new Offices(countryID, title, phone, contact);
+        Offices office = new Offices(countriesRepository.findById(countryID).orElseThrow(), title, phone, contact);
         officesRepository.save(office);
         return office.getId();
     }
@@ -46,7 +50,7 @@ public class OfficesController {
         try {
             Offices office = officesRepository.findById(id).orElseThrow();
             if (countryID == null) {
-                countryID = office.getCountryId();
+                countryID = office.getCountry().getId();
             }
             if (title == null) {
                 phone = office.getTitle();
@@ -57,7 +61,7 @@ public class OfficesController {
             if (contact == null) {
                 contact = office.getContact();
             }
-            office.setCountryId(countryID);
+            office.setCountry(countriesRepository.findById(countryID).orElseThrow());
             office.setTitle(title);
             office.setPhone(phone);
             office.setContact(contact);

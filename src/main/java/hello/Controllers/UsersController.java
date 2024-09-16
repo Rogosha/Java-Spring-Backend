@@ -1,13 +1,18 @@
 package hello.Controllers;
 
 import hello.Models.Users;
-import hello.Other.ArrayOfUsers;
+import hello.Models.UsersInfo;
+import hello.Other.ArrayOf;
+import hello.Repositories.OfficesRepository;
+import hello.Repositories.RolesRepository;
+import hello.Repositories.UsersInfoRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import hello.Other.getHash;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,15 @@ import java.util.Optional;
 public class UsersController {
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private OfficesRepository officesRepository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
+
+    @Autowired
+    private UsersInfoRepository usersInfoRepository;
 
     @GetMapping("/users")
     public Iterable<Users> getUsers() {
@@ -31,25 +45,37 @@ public class UsersController {
 
     @GetMapping("/users/verify")
     public String verifyUser(@RequestParam(name = "Email") String email, @RequestParam(name = "Password") String password){
-        Iterable<Users> usersIterable = usersRepository.findAll();
-        List<Users> usersList = new ArrayList<>();
-        Users[] users = ArrayOfUsers.toArray(usersIterable);
+        Users[] users = ArrayOf.Users(usersRepository.findAll());
         Users user = null;
         for (Users userTemp : users ){
             if (userTemp.getEmail().equals(email)) user = userTemp;
         }
-        if ( (user != null) && getHash.getH(password).equals(user.getPassword()) ){
-            return "SUCCESSFUL VERIFICATION";
-        } else  if ( (user != null) && !getHash.getH(password).equals(user.getPassword()) ){
-                return "INCORRECT PASSWORD ";
+
+        UsersInfo[] usersInfos = ArrayOf.UsersInfo(usersInfoRepository.findAll());
+        UsersInfo userInfo = null;
+        for (UsersInfo userInfoTemp : usersInfos ){
+            if (userInfoTemp.getUser() == user){
+                userInfo = userInfoTemp;
+            }
+        }
+
+        if (user != null){
+            if (getHash.getH(password).equals(user.getPassword())){
+                if (userInfo == null || userInfo.getBlockingReason() == null){
+                    return "ACCESS ACCEPT";
+                } else {
+                    return "ACCESS DENIED: " + userInfo.getBlockingReason();
+                }
+            } else {
+                return "INCORRECT PASSWORD";
+            }
         } else {
-            return "NOT FOUND USER";
+            return "USER NOT FOUND";
         }
     }
 
     @PostMapping("/users")
     public Integer postUser(
-            @RequestParam(name = "ID", required = false) Integer id,
             @RequestParam(name = "RoleID") Integer roleID,
             @RequestParam(name = "Email") String email,
             @RequestParam(name = "Password") String password,
@@ -61,11 +87,7 @@ public class UsersController {
         String[] date = birth.split("-");
         LocalDate birthdate = LocalDate.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]));
         Users user;
-        if (id != null){
-            user = new Users(id, roleID, email, getHash.getH(password), firstName, lastName, officeId, birthdate, active);
-        } else {
-            user = new Users(roleID, email, getHash.getH(password), firstName, lastName, officeId, birthdate, active);
-        }
+            user = new Users(rolesRepository.findById(roleID).orElseThrow(), email, getHash.getH(password), firstName, lastName, officesRepository.findById(officeId).orElseThrow(), birthdate, active);
         usersRepository.save(user);
         return user.getId();
     }
@@ -79,17 +101,23 @@ public class UsersController {
             @RequestParam(name = "FirstName", required = false) String firstName,
             @RequestParam(name = "LastName", required = false) String lastName,
             @RequestParam(name = "OfficeID", required = false) Integer officeId,
-            @RequestParam(name = "Birthdate", required = false) String birth,
+            @RequestParam(name = "Birthdate", required = false) String birthDateString,
             @RequestParam(name = "Active", required = false) Boolean active) {
         LocalDate birthdate = null;
+        /*
         if (birth != null) {
             String[] date = birth.split("-");
             birthdate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
-        }
+        }*/
         try {
             Users user = usersRepository.findById(id).orElseThrow();
+            if (birthDateString != null) {
+                birthdate = LocalDate.parse(birthDateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            } else {
+                birthdate = user.getBirthdate();
+            }
             if (roleID == null) {
-                roleID = user.getRoleId();
+                roleID = user.getRole().getId();
             }
             if (email == null) {
                  email = user.getEmail();
@@ -106,20 +134,20 @@ public class UsersController {
                 lastName = user.getLastName();
             }
             if (officeId == null) {
-                officeId = user.getOfficeId();
+                officeId = user.getOffice().getId();
             }
-            if (birthdate == null) {
+           /* if (birthdate == null) {
                 birthdate = user.getBirthdate();
-            }
+            } */
             if (active == null) {
                 active = user.getActive();
             }
-            user.setRoleId(roleID);
+            user.setRole(rolesRepository.findById(roleID).orElseThrow());
             user.setEmail(email);
             user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
-            user.setOfficeId(officeId);
+            user.setOffice(officesRepository.findById(officeId).orElseThrow());
             user.setBirthdate(birthdate);
             user.setActive(active);
             usersRepository.save(user);
