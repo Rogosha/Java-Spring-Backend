@@ -1,41 +1,41 @@
 package hello.Controllers;
 
-import hello.Models.Countries;
-import hello.Repositories.CountriesRepository;
+import hello.Models.UsersBlocking;
+import hello.Repositories.UsersBlockingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 @RestController
-public class CountriesController {
-
+public class UsersBlockingController {
     @Autowired
-    private CountriesRepository countriesRepository;
+    private UsersBlockingRepository usersBlockingRepository;
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @GetMapping("/countries")
-    public Iterable<Countries> getCountries() {
-        return countriesRepository.findAll();
+    @GetMapping("/usersblocking")
+    public Iterable<UsersBlocking> getCountries() {
+        return usersBlockingRepository.findAll();
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @GetMapping("/countries/{id}")
-    public Optional<Countries> getCountry(@PathVariable(value = "id") int id) {
-        return countriesRepository.findById(id);
+    @GetMapping("/usersblocking/{id}")
+    public Optional<UsersBlocking> getCountry(@PathVariable(value = "id") int id) {
+        return usersBlockingRepository.findById(id);
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @PostMapping("/countries")
-    public Integer postCountry(@RequestBody Countries country) {
-        countriesRepository.save(country);
-        return country.getId();
+    @PostMapping("/usersblocking")
+    public Integer postCountry(@RequestBody UsersBlocking usersBlocking) {
+        usersBlockingRepository.save(usersBlocking);
+        return usersBlocking.getId();
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @PutMapping("/countries")
-    public String putCountry(@RequestBody Countries country) {
+    @PutMapping("/usersblocking/{id}")
+    public String putCountry(@RequestBody UsersBlocking usersBlocking) {
         try {
-            countriesRepository.save(country);
+            usersBlockingRepository.save(usersBlocking);
             return "OK";
         } catch (Exception e) {
             return "NOT_OK";
@@ -43,12 +43,12 @@ public class CountriesController {
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @DeleteMapping("/countries/{id}")
+    @DeleteMapping("/usersblocking/{id}")
     public String deleteCountry(
             @PathVariable(value = "id") int id) {
         try {
-            Countries country = countriesRepository.findById(id).orElseThrow();
-            countriesRepository.delete(country);
+            UsersBlocking usersBlocking = usersBlockingRepository.findById(id).orElseThrow();
+            usersBlockingRepository.delete(usersBlocking);
             return "OK";
         } catch (Exception e) {
             return "NOT_OK";

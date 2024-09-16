@@ -2,24 +2,23 @@ package hello.Models;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usersinfo")
-public class UsersInfo {
+@Table(name = "userslogs")
+public class UsersLogs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "UserID", referencedColumnName = "id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "UserID", referencedColumnName = "id", nullable = false)
     private Users user;
 
-    @Column(name = "LogInTime")
+    @Column(name = "LogInTime", nullable = false)
     private LocalDateTime logInTime;
 
-    @Column(name = "LogOutTime")
+    @Column(name = "LogOutTime", nullable = false)
     private LocalDateTime logOutTime;
 
     @Column(name = "CrashReason",length = 200)
@@ -30,9 +29,6 @@ public class UsersInfo {
 
     @Column(name = "IsSystemCrash")
     private Boolean systemCrash;
-
-    @Column(name = "BlockingReason", length = 200)
-    private String blockingReason;
 
     public int getId() {
         return id;
@@ -86,24 +82,15 @@ public class UsersInfo {
         this.systemCrash = systemCrash;
     }
 
-    public String getBlockingReason() {
-        return blockingReason;
-    }
-
-    public void setBlockingReason(String blockingReason) {
-        this.blockingReason = blockingReason;
-    }
-
-    public UsersInfo(Users user, LocalDateTime logInTime, LocalDateTime logOutTime, String crashReason, Boolean softwareCrash, Boolean systemCrash, String blockingReason) {
+    public UsersLogs(Users user, LocalDateTime logInTime, LocalDateTime logOutTime, String crashReason, Boolean softwareCrash, Boolean systemCrash) {
         this.user = user;
         this.logInTime = logInTime;
         this.logOutTime = logOutTime;
         this.crashReason = crashReason;
         this.softwareCrash = softwareCrash;
         this.systemCrash = systemCrash;
-        this.blockingReason = blockingReason;
     }
 
-    public UsersInfo() {
+    public UsersLogs() {
     }
 }

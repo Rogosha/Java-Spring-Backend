@@ -16,55 +16,44 @@ public class OfficesController {
     @Autowired
     private CountriesRepository countriesRepository;
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/offices")
     public Iterable<Offices> getOffices() {
         Iterable<Offices> offices = officesRepository.findAll();
         return offices;
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/offices/{id}")
     public Optional<Offices> getOffice(@PathVariable(value = "id") int id) {
         Optional<Offices> office = officesRepository.findById(id);
         return office;
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/offices")
-    public Integer postOffice(
-            @RequestParam(name = "CountryID") Integer countryID,
-            @RequestParam(name = "Title") String title,
-            @RequestParam(name = "Phone") String phone,
-            @RequestParam(name = "Contact") String contact) {
-
-        Offices office = new Offices(countriesRepository.findById(countryID).orElseThrow(), title, phone, contact);
+    public Integer postOffice(@RequestBody Offices office) {
         officesRepository.save(office);
         return office.getId();
     }
 
-    @PutMapping("/offices/{id}")
-    public String putOffice(
-            @PathVariable(value = "id") int id,
-            @RequestParam(name = "CountryID", required = false) Integer countryID,
-            @RequestParam(name = "Title", required = false) String title,
-            @RequestParam(name = "Phone", required = false) String phone,
-            @RequestParam(name = "Contact", required = false) String contact) {
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @PutMapping("/offices")
+    public String putOffice(@RequestBody Offices newOffice) {
         try {
-            Offices office = officesRepository.findById(id).orElseThrow();
-            if (countryID == null) {
-                countryID = office.getCountry().getId();
+            Offices office = officesRepository.findById(newOffice.getId()).orElseThrow();
+            if (newOffice.getCountry() != null) {
+                office.setCountry(newOffice.getCountry());
             }
-            if (title == null) {
-                phone = office.getTitle();
+            if (newOffice.getTitle() != null) {
+                office.setTitle(newOffice.getTitle());
             }
-            if (phone == null) {
-                phone = office.getPhone();
+            if (newOffice.getPhone() != null) {
+                office.setPhone(newOffice.getPhone());
             }
-            if (contact == null) {
-                contact = office.getContact();
+            if (newOffice.getContact() != null) {
+                office.setContact(newOffice.getContact());
             }
-            office.setCountry(countriesRepository.findById(countryID).orElseThrow());
-            office.setTitle(title);
-            office.setPhone(phone);
-            office.setContact(contact);
             officesRepository.save(office);
             return "OK";
         } catch (Exception e) {
@@ -72,6 +61,7 @@ public class OfficesController {
         }
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/offices/{id}")
     public String deleteOffice(
             @PathVariable(value = "id") int id) {

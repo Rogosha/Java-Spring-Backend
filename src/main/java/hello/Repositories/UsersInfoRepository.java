@@ -1,7 +1,7 @@
 package hello.Repositories;
 
-import hello.Models.UsersInfo;
+import hello.Models.UsersLogs;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UsersInfoRepository extends CrudRepository<UsersInfo, Integer> {
+public interface UsersInfoRepository extends CrudRepository<UsersLogs, Integer> {
 }

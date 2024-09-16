@@ -1,7 +1,8 @@
 package hello.Other;
 
 import hello.Models.Users;
-import hello.Models.UsersInfo;
+import hello.Models.UsersBlocking;
+import hello.Models.UsersLogs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,13 @@ public interface ArrayOf {
         usersList.toArray(usersArray);
         return usersArray;
     }
-    public static UsersInfo[] UsersInfo(Iterable<UsersInfo> usersIterable){
-        List<UsersInfo> usersList = new ArrayList<>();
-        for (UsersInfo usersInfo : usersIterable){
-            usersList.add(usersInfo);
+    public static UsersBlocking[] UsersBlocking(Iterable<UsersBlocking> usersIterable){
+        List<UsersBlocking> usersList = new ArrayList<>();
+        for (UsersBlocking usersBlocking : usersIterable){
+            usersList.add(usersBlocking);
         }
-        UsersInfo[] usersInfoArray = new UsersInfo[usersList.size()];
-        usersList.toArray(usersInfoArray);
-        return usersInfoArray;
+        UsersBlocking[] usersBlockingArray = new UsersBlocking[usersList.size()];
+        usersList.toArray(usersBlockingArray);
+        return usersBlockingArray;
     }
 }

@@ -1,9 +1,11 @@
 package hello.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -16,15 +18,19 @@ public class Users {
     @JoinColumn(name="RoleID", nullable = false)
     private Roles role;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<UsersLogs> userLogs;
+
     @OneToOne(mappedBy = "user")
-    //@JsonIgnore
-    private UsersInfo userInfo;
+    @JsonIgnore
+    private UsersBlocking userBlocking;
 
     @Column(nullable = false, length = 150, unique = true)
     private String email;
 
     @Column(nullable = false, length = 50)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name="Firstname", length = 50)

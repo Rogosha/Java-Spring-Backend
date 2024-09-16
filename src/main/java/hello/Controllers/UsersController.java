@@ -1,20 +1,15 @@
 package hello.Controllers;
 
 import hello.Models.Users;
-import hello.Models.UsersInfo;
+import hello.Models.UsersBlocking;
+import hello.Models.UsersLogs;
 import hello.Other.ArrayOf;
-import hello.Repositories.OfficesRepository;
-import hello.Repositories.RolesRepository;
+import hello.Repositories.UsersBlockingRepository;
 import hello.Repositories.UsersInfoRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import hello.Other.getHash;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,48 +18,43 @@ public class UsersController {
     private UsersRepository usersRepository;
 
     @Autowired
-    private OfficesRepository officesRepository;
+    private UsersBlockingRepository usersBlockingRepository;
 
-    @Autowired
-    private RolesRepository rolesRepository;
-
-    @Autowired
-    private UsersInfoRepository usersInfoRepository;
-
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/users")
     public Iterable<Users> getUsers() {
-        Iterable<Users> users = usersRepository.findAll();
-        return users;
+        return usersRepository.findAll();
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/users/{id}")
     public Optional<Users> getUser(@PathVariable(value = "id") int id) {
-        Optional<Users> user = usersRepository.findById(id);
-        return user;
+        return usersRepository.findById(id);
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/users/verify")
-    public String verifyUser(@RequestParam(name = "Email") String email, @RequestParam(name = "Password") String password){
+    public String verifyUser(@RequestBody Users newUser){
         Users[] users = ArrayOf.Users(usersRepository.findAll());
         Users user = null;
         for (Users userTemp : users ){
-            if (userTemp.getEmail().equals(email)) user = userTemp;
+            if (userTemp.getEmail().equals(newUser.getEmail())) user = userTemp;
         }
 
-        UsersInfo[] usersInfos = ArrayOf.UsersInfo(usersInfoRepository.findAll());
-        UsersInfo userInfo = null;
-        for (UsersInfo userInfoTemp : usersInfos ){
-            if (userInfoTemp.getUser() == user){
-                userInfo = userInfoTemp;
+        UsersBlocking[] usersBlockings = ArrayOf.UsersBlocking(usersBlockingRepository.findAll());
+        UsersBlocking usersBlocking = null;
+        for (UsersBlocking userBlockingTemp : usersBlockings){
+            if (userBlockingTemp.getUser() == user){
+                usersBlocking = userBlockingTemp;
             }
         }
 
         if (user != null){
-            if (getHash.getH(password).equals(user.getPassword())){
-                if (userInfo == null || userInfo.getBlockingReason() == null){
+            if (user.getPassword().equals(getHash.getH(newUser.getPassword()))){
+                if (usersBlocking == null || usersBlocking.getBlockingReason() == null){
                     return "ACCESS ACCEPT";
                 } else {
-                    return "ACCESS DENIED: " + userInfo.getBlockingReason();
+                    return "ACCESS DENIED: " + usersBlocking.getBlockingReason();
                 }
             } else {
                 return "INCORRECT PASSWORD";
@@ -74,88 +64,51 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/users")
-    public Integer postUser(
-            @RequestParam(name = "RoleID") Integer roleID,
-            @RequestParam(name = "Email") String email,
-            @RequestParam(name = "Password") String password,
-            @RequestParam(name = "FirstName") String firstName,
-            @RequestParam(name = "LastName") String lastName,
-            @RequestParam(name = "OfficeID") int officeId,
-            @RequestParam(name = "Birthdate") String birth,
-            @RequestParam(name = "Active") boolean active) {
-        String[] date = birth.split("-");
-        LocalDate birthdate = LocalDate.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]));
-        Users user;
-            user = new Users(rolesRepository.findById(roleID).orElseThrow(), email, getHash.getH(password), firstName, lastName, officesRepository.findById(officeId).orElseThrow(), birthdate, active);
+    public Integer postUser(@RequestBody Users user) {
         usersRepository.save(user);
         return user.getId();
     }
 
-    @PutMapping("/users/{id}")
-    public String putUser(
-            @PathVariable(value = "id") int id,
-            @RequestParam(name = "RoleID", required = false) Integer roleID,
-            @RequestParam(name = "Email", required = false) String email,
-            @RequestParam(name = "Password", required = false) String password,
-            @RequestParam(name = "FirstName", required = false) String firstName,
-            @RequestParam(name = "LastName", required = false) String lastName,
-            @RequestParam(name = "OfficeID", required = false) Integer officeId,
-            @RequestParam(name = "Birthdate", required = false) String birthDateString,
-            @RequestParam(name = "Active", required = false) Boolean active) {
-        LocalDate birthdate = null;
-        /*
-        if (birth != null) {
-            String[] date = birth.split("-");
-            birthdate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
-        }*/
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @PutMapping("/users")
+    public String putUser(@RequestBody Users newUser) {
         try {
-            Users user = usersRepository.findById(id).orElseThrow();
-            if (birthDateString != null) {
-                birthdate = LocalDate.parse(birthDateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            } else {
-                birthdate = user.getBirthdate();
+            Users user = usersRepository.findById(newUser.getId()).orElseThrow();
+
+            if (newUser.getRole() != null) {
+                user.setRole(newUser.getRole());
             }
-            if (roleID == null) {
-                roleID = user.getRole().getId();
+            if (newUser.getEmail() != null) {
+                 user.setEmail(newUser.getEmail());
             }
-            if (email == null) {
-                 email = user.getEmail();
+            if (newUser.getPassword() != null) {
+                user.setPassword(newUser.getPassword());
             }
-            if (password == null) {
-                password = user.getPassword();
-            } else {
-                password = getHash.getH(password);
+            if (newUser.getFirstName() != null) {
+                user.setFirstName(newUser.getFirstName());
             }
-            if (firstName == null) {
-                firstName = user.getFirstName();
+            if (newUser.getLastName() != null) {
+                user.setLastName(newUser.getLastName());
             }
-            if (lastName == null) {
-                lastName = user.getLastName();
+            if (newUser.getOffice() != null) {
+                user.setOffice(newUser.getOffice());
             }
-            if (officeId == null) {
-                officeId = user.getOffice().getId();
+            if (newUser.getBirthdate() != null) {
+                user.setBirthdate(newUser.getBirthdate());
             }
-           /* if (birthdate == null) {
-                birthdate = user.getBirthdate();
-            } */
-            if (active == null) {
-                active = user.getActive();
+            if (newUser.getActive() != null) {
+                user.setActive(newUser.getActive());
             }
-            user.setRole(rolesRepository.findById(roleID).orElseThrow());
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setOffice(officesRepository.findById(officeId).orElseThrow());
-            user.setBirthdate(birthdate);
-            user.setActive(active);
             usersRepository.save(user);
             return "OK";
         } catch (Exception e) {
             return "NOT_OK";
         }
     }
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/users/{id}")
     public String deleteUser(
             @PathVariable(value = "id") int id) {
