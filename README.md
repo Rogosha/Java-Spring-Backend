@@ -16,11 +16,12 @@ GET /countries - вывод всех стран
 GET /countries/{id} - вывод страны по id
 
 POST /countires?Name=**NAME** - добавление страны
-NAME - название страны
+
+- NAME - название страны. String, 50
 
 PUT /countires/{id}?Name=**NAME** - редактирование страны
 
-- NAME - название страны
+- NAME - название страны. String, 50
 
 DELETE /countires/{id} - удаление страны
 
@@ -34,17 +35,17 @@ GET /offices/{id} - вывод офиса по id
         
 POST /offices?CountryID=**COUNTRYID**&Title=**TITLE**&Phone=**PHONE**&Contact=**CONTACT** - добавление нового офиса
 
-- COUNTRYID - id страны, integer
-- TITLE - название офиса, string
-- PHONE - номер телефона, string
-- CONTACT - главный в офсие, string
+- COUNTRYID - id страны. Integer
+- TITLE - название офиса. String, 50
+- PHONE - номер телефона. String, 50
+- CONTACT - главный в офсие. String, 150
 
 PUT /offices/{id}?CountryID=**COUNTRYID**&Title=**TITLE**&Phone=**PHONE**&Contact=**CONTACT** - редактирование офиса
 
-- COUNTRYID - id страны, integer
-- TITLE - название офиса, string
-- PHONE - номер телефона, string
-- CONTACT - главный в офсие, string
+- COUNTRYID - id страны. Integer
+- TITLE - название офиса. String, 50
+- PHONE - номер телефона. String, 50
+- CONTACT - главный в офсие. String, 150
 
 DELETE /offices/{id} - удаление офиса по id
 
@@ -53,10 +54,11 @@ DELETE /offices/{id} - удаление офиса по id
 <h2>Роли /roles</h2>
 
 GET /roles - вывод всех ролей
+
 GET /roles/{id} - вывод роли по id
 
 
-<h2>ПОльзователи /users</h2>
+<h2>Пользователи /users</h2>
 
 GET /users - вывод всех пользователей
 
@@ -64,8 +66,8 @@ GET /users/{id} - вывод пользователя по id
 
 GET /users/verify?Email=**EMAIL**&Password=**PASSWORD**
 
-- EMAIL - email, string
-- PASSWORD - пароль, string
+- EMAIL - email. String, 150
+- PASSWORD - пароль. String, 50
 Ответы верификации:
 - ACCESS ACCEPT - правильный логин и пароль, блокирововок нет
 - ACESS DENIED: **blocking reason** - пользователь заброкирован, выводится причина блокировки
@@ -74,25 +76,25 @@ GET /users/verify?Email=**EMAIL**&Password=**PASSWORD**
 
 POST /users?RoleID=**ROLEDID**&Email=**EMAIL**&Password=**PASSWORD**&FirstName=**FIRSTNAME**&LastName=**LASTNAME**&OfficeID=**OFFICEID**&Birthdate=**BIRTHDATE**&Active=**ACTIVE** - добавление пользователя
 
-- ROLEID - id роли, integer
-- EMAIL - email 
-- PASSWORD - пароль, string
-- FIRSTNAME - имя, string
-- LASTNAME - фамилия, string
+- ROLEID - id роли. Integer
+- EMAIL - email. String, 150
+- PASSWORD - пароль. String, 50
+- FIRSTNAME - имя. String, 50
+- LASTNAME - фамилия. String, 50
 - OFFICEID - id офиса, integer
-- BIRTHDATE - дата рождения, dd-mm-yyyy
-- ACTIVE - онлайн или нет, видимо, boolean
+- BIRTHDATE - дата рождения. dd-mm-yyyy
+- ACTIVE - онлайн или нет, видимо. Boolean
 
 PUT /users/{id}?RoleID=**ROLEDID**&Email=**EMAIL**&Password=**PASSWORD**&FirstName=**FIRSTNAME**&LastName=**LASTNAME**&OfficeID=**OFFICEID**&Birthdate=**BIRTHDATE**&Active=**ACTIVE** - редактирование пользователя по id
 
-- ROLEID - id роли, не требуется, integer
-- EMAIL - email , не требуется, string
-- PASSWORD - пароль, не требуется, string
-- FIRSTNAME - имя, не требуется, string
-- LASTNAME - фамилия, не требуется, string
-- OFFICEID - id офиса, не требуется, integer
-- BIRTHDATE - дата рождения, не требуется, dd-mm-yyyy
-- ACTIVE - онлайн или нет, видимо, не требуется, boolean
+- ROLEID - id роли, не требуется. integer
+- EMAIL - email , не требуется. String, 150
+- PASSWORD - пароль, не требуется. String, 50
+- FIRSTNAME - имя, не требуется. String, 50
+- LASTNAME - фамилия, не требуется. String, 50
+- OFFICEID - id офиса, не требуется. Integer
+- BIRTHDATE - дата рождения, не требуется. dd-mm-yyyy
+- ACTIVE - онлайн или нет, видимо, не требуется. Boolean
 
 DELETE /users/{id} - удаление пользователя по id
 
@@ -107,7 +109,19 @@ POST /usersinfo?UserID=**USERID**&LogInTime=**LOGINTIME**&LogOutTime=**LOGOUTTIM
 - USERID - id пользователя, к которому предписаны логи
 - LOGINTIME - время входа, ss:mm:hh dd-mm-yyyy
 - LOGOUTTIME - время выхода, ss:mm:hh dd-mm-yyyy
-- CRASHREASON - причина сбоя, получается от пользователя из формы. String, не задавать или NULL при отсутствии
+- CRASHREASON - причина сбоя, получается от пользователя из формы. String, 200, не задавать или NULL при отсутствии
 - ISSOFTCRASH - в софте ли причина сбоя, получается от пользователя из формы. Boolean, не задавать или NULL при отсутствии
 - ISSYSTEMCRASH - в системе ли причина сбоя, получается от пользователя из формы. Boolean, не задавать или NULL при отсутствии
-- BLOCKINGREASON - причина блокировки. При наличии польщователь считается заблокированным, не пройдёт верификацию. String, не задавать или NULL при отсутствии
+- BLOCKINGREASON - причина блокировки. При наличии польщователь считается заблокированным, не пройдёт верификацию. String, 200, не задавать или NULL при отсутствии
+
+PUT /usersinfo/{id}?UserID=**USERID**&LogInTime=**LOGINTIME**&LogOutTime=**LOGOUTTIME**&CrashReason=**CRASHREASON**&IsSoftCrash=**ISSOFTCRASH**&IsSystemCrash=**ISSYSTEMCRASH**BlockingReason=**BLOCKINGREASON**
+
+- USERID - id пользователя, к которому предписаны логи. Integer
+- LOGINTIME - время входа. ss:mm:hh dd-mm-yyyy
+- LOGOUTTIME - время выхода. ss:mm:hh dd-mm-yyyy
+- CRASHREASON - причина сбоя, получается от пользователя из формы. String, 200, не задавать или NULL при отсутствии
+- ISSOFTCRASH - в софте ли причина сбоя, получается от пользователя из формы. Boolean, не задавать или NULL при отсутствии
+- ISSYSTEMCRASH - в системе ли причина сбоя, получается от пользователя из формы. Boolean, не задавать или NULL при отсутствии
+- BLOCKINGREASON - причина блокировки. При наличии польщователь считается заблокированным, не пройдёт верификацию. String, 200, не задавать или NULL при отсутствии
+
+DELETE /usersinfo/{id} - удаление логов по id логов
