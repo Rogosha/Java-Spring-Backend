@@ -13,7 +13,7 @@ public class Roles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "Title", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
+    @Column(name = "Title", length = 50, nullable = false)
     private String title;
 
     @OneToMany(mappedBy = "role")

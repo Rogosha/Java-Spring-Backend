@@ -2,10 +2,8 @@ package hello.Controllers;
 
 import hello.Models.Users;
 import hello.Models.UsersBlocking;
-import hello.Models.UsersLogs;
 import hello.Other.ArrayOf;
 import hello.Repositories.UsersBlockingRepository;
-import hello.Repositories.UsersInfoRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +31,7 @@ public class UsersController {
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @GetMapping("/users/verify")
+    @PostMapping("/users/verify")
     public String verifyUser(@RequestBody Users newUser){
         Users[] users = ArrayOf.Users(usersRepository.findAll());
         Users user = null;
@@ -84,7 +82,7 @@ public class UsersController {
                  user.setEmail(newUser.getEmail());
             }
             if (newUser.getPassword() != null) {
-                user.setPassword(newUser.getPassword());
+                user.setPassword(getHash.getH(newUser.getPassword()));
             }
             if (newUser.getFirstName() != null) {
                 user.setFirstName(newUser.getFirstName());

@@ -20,13 +20,13 @@ public class Offices {
     @JsonIgnore
     private List<Users> users;
 
-    @Column(name = "Title", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
+    @Column(name = "Title", length = 50, nullable = false)
     private String title;
 
-    @Column(name = "Phone", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
+    @Column(name = "Phone", length = 50, nullable = false)
     private String phone;
 
-    @Column(name = "Contact", length = 250, columnDefinition = "COLLATE utf8_bin", nullable = false)
+    @Column(name = "Contact", length = 250, nullable = false)
     private String contact;
 
 

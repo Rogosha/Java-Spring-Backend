@@ -12,12 +12,16 @@ public class Countries {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name ="Name", length = 50, columnDefinition = "COLLATE utf8_bin", nullable = false)
+    @Column(name ="Name", length = 50, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "country")
     @JsonIgnore
     private List<Offices> offices;
+
+    @OneToMany(mappedBy = "country")
+    @JsonIgnore
+    private List<Airports> airports ;
 
     public int getId() {
         return id;
