@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="airports")
+@Table(name = "airports")
 public class Airports {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,10 +17,10 @@ public class Airports {
     @JoinColumn(name = "CountryID", referencedColumnName = "id", nullable = false)
     private Countries country;
 
-    @Column(name ="IATACode", length = 3, nullable = false)
+    @Column(name = "IATACode", length = 3, nullable = false)
     private String IATACode;
 
-    @Column(name ="Name", length = 50)
+    @Column(name = "Name", length = 50)
     private String name;
 
     @OneToMany(mappedBy = "departureAirport")

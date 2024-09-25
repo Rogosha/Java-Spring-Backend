@@ -8,14 +8,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name="RoleID", nullable = false)
+    @JoinColumn(name = "RoleID", nullable = false)
     private Roles role;
 
     @OneToMany(mappedBy = "user")
@@ -33,20 +33,20 @@ public class Users {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Column(name="Firstname", length = 50)
+    @Column(name = "Firstname", length = 50)
     private String firstName;
 
-    @Column(name="Lastname", nullable = false, length = 50)
+    @Column(name = "Lastname", nullable = false, length = 50)
     private String lastName;
 
     @ManyToOne
-    @JoinColumn(name="OfficeID")
+    @JoinColumn(name = "OfficeID")
     private Offices office;
 
     @Column
     private LocalDate birthdate;
 
-    @Column(name="Active")
+    @Column(name = "Active")
     private Boolean active;
 
     public int getId() {

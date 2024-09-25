@@ -21,7 +21,7 @@ public class UsersLogs {
     @Column(name = "LogOutTime", nullable = false)
     private LocalDateTime logOutTime;
 
-    @Column(name = "CrashReason",length = 200)
+    @Column(name = "CrashReason", length = 200)
     private String crashReason;
 
     @Column(name = "IsSoftwareCrash")

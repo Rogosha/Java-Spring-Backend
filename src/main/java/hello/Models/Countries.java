@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="countries")
+@Table(name = "countries")
 public class Countries {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name ="Name", length = 50, nullable = false)
+    @Column(name = "Name", length = 50, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "country")
@@ -21,7 +21,7 @@ public class Countries {
 
     @OneToMany(mappedBy = "country")
     @JsonIgnore
-    private List<Airports> airports ;
+    private List<Airports> airports;
 
     public int getId() {
         return id;

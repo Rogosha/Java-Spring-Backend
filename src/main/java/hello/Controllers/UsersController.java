@@ -5,9 +5,11 @@ import hello.Models.UsersBlocking;
 import hello.Other.ArrayOf;
 import hello.Repositories.UsersBlockingRepository;
 import hello.Repositories.UsersRepository;
+import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import hello.Other.getHash;
+
 import java.util.Optional;
 
 @RestController
@@ -32,33 +34,38 @@ public class UsersController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/users/verify")
-    public String verifyUser(@RequestBody Users newUser){
+    public Response verifyUser(@RequestBody Users newUser) {
         Users[] users = ArrayOf.Users(usersRepository.findAll());
         Users user = null;
-        for (Users userTemp : users ){
+        for (Users userTemp : users) {
             if (userTemp.getEmail().equals(newUser.getEmail())) user = userTemp;
         }
 
         UsersBlocking[] usersBlockings = ArrayOf.UsersBlocking(usersBlockingRepository.findAll());
         UsersBlocking usersBlocking = null;
-        for (UsersBlocking userBlockingTemp : usersBlockings){
-            if (userBlockingTemp.getUser() == user){
+        for (UsersBlocking userBlockingTemp : usersBlockings) {
+            if (userBlockingTemp.getUser() == user) {
                 usersBlocking = userBlockingTemp;
             }
         }
 
-        if (user != null){
-            if (user.getPassword().equals(getHash.getH(newUser.getPassword()))){
-                if (usersBlocking == null || usersBlocking.getBlockingReason() == null){
-                    return "ACCESS ACCEPT";
+        Response response = new Response();
+        if (user != null) {
+            if (user.getPassword().equals(getHash.getH(newUser.getPassword()))) {
+                if (usersBlocking == null || usersBlocking.getBlockingReason() == null) {
+                    response.setStatus("ACCESS ACCEPT");
+                    return response;
                 } else {
-                    return "ACCESS DENIED: " + usersBlocking.getBlockingReason();
+                    response.setStatus("ACCESS DENIED: " + usersBlocking.getBlockingReason());
+                    return response;
                 }
             } else {
-                return "INCORRECT PASSWORD";
+                response.setStatus("INCORRECT PASSWORD");
+                return response;
             }
         } else {
-            return "USER NOT FOUND";
+            response.setStatus("USER NOT FOUND");
+            return response;
         }
     }
 
@@ -79,7 +86,7 @@ public class UsersController {
                 user.setRole(newUser.getRole());
             }
             if (newUser.getEmail() != null) {
-                 user.setEmail(newUser.getEmail());
+                user.setEmail(newUser.getEmail());
             }
             if (newUser.getPassword() != null) {
                 user.setPassword(getHash.getH(newUser.getPassword()));
@@ -108,8 +115,7 @@ public class UsersController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/users/{id}")
-    public String deleteUser(
-            @PathVariable(value = "id") int id) {
+    public String deleteUser(@PathVariable(value = "id") int id) {
         try {
             Users user = usersRepository.findById(id).orElseThrow();
             usersRepository.delete(user);

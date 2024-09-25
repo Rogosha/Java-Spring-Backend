@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="routes")
+@Table(name = "routes")
 public class Routes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Routes {
 
     @OneToMany(mappedBy = "route")
     @JsonIgnore
-    private List<Schedules> schedules ;
+    private List<Schedules> schedules;
 
     public int getId() {
         return id;

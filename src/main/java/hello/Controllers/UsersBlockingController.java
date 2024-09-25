@@ -2,6 +2,7 @@ package hello.Controllers;
 
 import hello.Models.UsersBlocking;
 import hello.Repositories.UsersBlockingRepository;
+import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,25 +34,38 @@ public class UsersBlockingController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/usersblocking/{id}")
-    public String putCountry(@RequestBody UsersBlocking usersBlocking) {
+    public String putCountry(@RequestBody UsersBlocking newUserBlocking) {
+        Response response = new Response();
         try {
-            usersBlockingRepository.save(usersBlocking);
-            return "OK";
+            UsersBlocking userBlocking = usersBlockingRepository.findById(newUserBlocking.getId()).orElseThrow();
+            usersBlockingRepository.save(userBlocking);
+            if (newUserBlocking.getUser() != null) {
+                userBlocking.setUser(newUserBlocking.getUser());
+            }
+            if (newUserBlocking.getBlockingReason() != null) {
+                userBlocking.setBlockingReason(newUserBlocking.getBlockingReason());
+            }
+            usersBlockingRepository.save(userBlocking);
+            response.setStatus("OK");
+            return response.getStatus();
         } catch (Exception e) {
-            return "NOT_OK";
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/usersblocking/{id}")
-    public String deleteCountry(
-            @PathVariable(value = "id") int id) {
+    public String deleteCountry(@PathVariable(value = "id") int id) {
+        Response response = new Response();
         try {
             UsersBlocking usersBlocking = usersBlockingRepository.findById(id).orElseThrow();
             usersBlockingRepository.delete(usersBlocking);
-            return "OK";
+            response.setStatus("OK");
+            return response.getStatus();
         } catch (Exception e) {
-            return "NOT_OK";
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 }

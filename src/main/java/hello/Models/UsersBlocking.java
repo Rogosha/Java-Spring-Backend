@@ -15,7 +15,7 @@ public class UsersBlocking {
     @JoinColumn(name = "UserID", referencedColumnName = "id", unique = true, nullable = false)
     private Users user;
 
-    @Column(name = "BlockingReason",length = 200)
+    @Column(name = "BlockingReason", length = 200)
     private String blockingReason;
 
 

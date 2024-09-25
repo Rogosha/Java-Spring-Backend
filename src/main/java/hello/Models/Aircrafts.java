@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="aircrafts")
+@Table(name = "aircrafts")
 public class Aircrafts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Aircrafts {
     private Integer businessSeats;
 
     @Column(name = "Economyseats", nullable = false)
-    private int economySeats;
+    private Integer economySeats;
 
     @OneToMany(mappedBy = "aircraft")
     @JsonIgnore
@@ -67,7 +67,7 @@ public class Aircrafts {
         this.businessSeats = businessSeats;
     }
 
-    public int getEconomySeats() {
+    public Integer getEconomySeats() {
         return economySeats;
     }
 

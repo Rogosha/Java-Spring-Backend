@@ -3,8 +3,10 @@ package hello.Controllers;
 import hello.Models.Offices;
 import hello.Repositories.CountriesRepository;
 import hello.Repositories.OfficesRepository;
+import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 @RestController
@@ -40,6 +42,7 @@ public class OfficesController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/offices")
     public String putOffice(@RequestBody Offices newOffice) {
+        Response response = new Response();
         try {
             Offices office = officesRepository.findById(newOffice.getId()).orElseThrow();
             if (newOffice.getCountry() != null) {
@@ -55,22 +58,26 @@ public class OfficesController {
                 office.setContact(newOffice.getContact());
             }
             officesRepository.save(office);
-            return "OK";
+            response.setStatus("OK");
+            return response.getStatus();
         } catch (Exception e) {
-            return "NOT_OK";
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/offices/{id}")
-    public String deleteOffice(
-            @PathVariable(value = "id") int id) {
+    public String deleteOffice(@PathVariable(value = "id") int id) {
+        Response response = new Response();
         try {
             Offices office = officesRepository.findById(id).orElseThrow();
             officesRepository.delete(office);
-            return "OK";
+            response.setStatus("OK");
+            return response.getStatus();
         } catch (Exception e) {
-            return "NOT_OK";
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 }

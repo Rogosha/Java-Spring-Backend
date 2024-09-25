@@ -3,8 +3,10 @@ package hello.Controllers;
 import hello.Models.UsersLogs;
 import hello.Repositories.UsersInfoRepository;
 import hello.Repositories.UsersRepository;
+import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 @RestController
@@ -29,14 +31,15 @@ public class UsersLogsController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/userslogs")
-    public Integer postUserLogs(@RequestBody UsersLogs usersLogs){
+    public Integer postUserLogs(@RequestBody UsersLogs usersLogs) {
         usersLogsRepository.save(usersLogs);
         return usersLogs.getId();
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/userslogs/")
-    public String putUserLogs(@RequestBody UsersLogs newUserLogs){
+    public String putUserLogs(@RequestBody UsersLogs newUserLogs) {
+        Response response = new Response();
         try {
             UsersLogs userLogs = usersLogsRepository.findById(newUserLogs.getId()).orElseThrow();
             if (newUserLogs.getLogInTime() != null) {
@@ -46,7 +49,7 @@ public class UsersLogsController {
                 userLogs.setLogOutTime(newUserLogs.getLogOutTime());
             }
             if (newUserLogs.getCrashReason() != null) {
-                userLogs.setCrashReason(newUserLogs.getCrashReason() );
+                userLogs.setCrashReason(newUserLogs.getCrashReason());
             }
             if (newUserLogs.getSoftwareCrash() != null) {
                 userLogs.setSoftwareCrash(newUserLogs.getSoftwareCrash());
@@ -55,22 +58,26 @@ public class UsersLogsController {
                 userLogs.setSystemCrash(newUserLogs.getSystemCrash());
             }
             usersLogsRepository.save(userLogs);
-            return "OK";
-        } catch (Exception e){
-            return "NOT OK";
+            response.setStatus("OK");
+            return response.getStatus();
+        } catch (Exception e) {
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/userslogs/{id}")
-    public String deleteUserLogs(
-            @PathVariable(value = "id") int id) {
+    public String deleteUserLogs(@PathVariable(value = "id") int id) {
+        Response response = new Response();
         try {
             UsersLogs userInfo = usersLogsRepository.findById(id).orElseThrow();
             usersLogsRepository.delete(userInfo);
-            return "OK";
+            response.setStatus("OK");
+            return response.getStatus();
         } catch (Exception e) {
-            return "NOT_OK";
+            response.setStatus("NOT_OK");
+            return response.getStatus();
         }
     }
 }
