@@ -30,14 +30,14 @@ public class AircraftsController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/aircrafts")
-    public Integer postAircraft(@RequestBody Aircrafts aircraft) {
+    public Aircrafts postAircraft(@RequestBody Aircrafts aircraft) {
         aircraftsRepository.save(aircraft);
-        return aircraft.getId();
+        return aircraft;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/aircrafts")
-    public String putAircraft(@RequestBody Aircrafts newAircraft) {
+    public Aircrafts putAircraft(@RequestBody Aircrafts newAircraft) {
         Response response = new Response();
         try {
             Aircrafts aircraft = aircraftsRepository.findById(newAircraft.getId()).orElseThrow();
@@ -58,26 +58,21 @@ public class AircraftsController {
                 aircraft.setEconomySeats(newAircraft.getEconomySeats());
             }
             aircraftsRepository.save(aircraft);
-            response.setStatus("OK");
-            return response.getStatus();
+            return aircraft;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/aircrafts/{id}")
-    public String deleteAircraft(@PathVariable(value = "id") int id) {
-        Response response = new Response();
+    public Aircrafts deleteAircraft(@PathVariable(value = "id") int id) {
         try {
             Aircrafts aircraft = aircraftsRepository.findById(id).orElseThrow();
             aircraftsRepository.delete(aircraft);
-            response.setStatus("OK");
-            return response.getStatus();
+            return aircraft;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 }

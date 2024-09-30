@@ -1,6 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.Offices;
+import hello.Models.OfficesDTO;
 import hello.Repositories.CountriesRepository;
 import hello.Repositories.OfficesRepository;
 import hello.Response;
@@ -34,50 +35,50 @@ public class OfficesController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/offices")
-    public Integer postOffice(@RequestBody Offices office) {
+    public Offices postOffice(@RequestBody OfficesDTO officeDTO) {
+        Offices office = new Offices();
+        office.setCountry(countriesRepository.findById(officeDTO.getCountry()).orElseThrow());
+        office.setTitle(officeDTO.getTitle());
+        office.setPhone(officeDTO.getPhone());
+        office.setContact(officeDTO.getContact());
         officesRepository.save(office);
-        return office.getId();
+        return office;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/offices")
-    public String putOffice(@RequestBody Offices newOffice) {
-        Response response = new Response();
+    public Offices putOffice(@RequestBody OfficesDTO officeDTO) {
         try {
-            Offices office = officesRepository.findById(newOffice.getId()).orElseThrow();
-            if (newOffice.getCountry() != null) {
-                office.setCountry(newOffice.getCountry());
+            Offices office = officesRepository.findById(officeDTO.getId()).orElseThrow();
+            if (officeDTO.getCountry() != null) {
+                office.setCountry(countriesRepository.findById(officeDTO.getCountry()).orElseThrow());
             }
-            if (newOffice.getTitle() != null) {
-                office.setTitle(newOffice.getTitle());
+            if (officeDTO.getTitle() != null) {
+                office.setTitle(officeDTO.getTitle());
             }
-            if (newOffice.getPhone() != null) {
-                office.setPhone(newOffice.getPhone());
+            if (officeDTO.getPhone() != null) {
+                office.setPhone(officeDTO.getPhone());
             }
-            if (newOffice.getContact() != null) {
-                office.setContact(newOffice.getContact());
+            if (officeDTO.getContact() != null) {
+                office.setContact(officeDTO.getContact());
             }
             officesRepository.save(office);
-            response.setStatus("OK");
-            return response.getStatus();
+            return office;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/offices/{id}")
-    public String deleteOffice(@PathVariable(value = "id") int id) {
+    public Offices deleteOffice(@PathVariable(value = "id") int id) {
         Response response = new Response();
         try {
             Offices office = officesRepository.findById(id).orElseThrow();
             officesRepository.delete(office);
-            response.setStatus("OK");
-            return response.getStatus();
+            return office;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 }

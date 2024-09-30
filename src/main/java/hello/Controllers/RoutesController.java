@@ -1,8 +1,9 @@
 package hello.Controllers;
 
 import hello.Models.Routes;
+import hello.Models.RoutesDTO;
+import hello.Repositories.AirportsRepository;
 import hello.Repositories.RoutesRepository;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,10 @@ import java.util.Optional;
 public class RoutesController {
     @Autowired
     private RoutesRepository routesRepository;
+
+    @Autowired
+    private AirportsRepository airportsRepository;
+
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/routes")
@@ -27,50 +32,49 @@ public class RoutesController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/routes")
-    public Integer postRoute(@RequestBody Routes route) {
+    public Routes postRoute(@RequestBody RoutesDTO routesDTO) {
+        Routes route = new Routes();
+        route.setDepartureAirport(airportsRepository.findById(routesDTO.getDepartureAirport()).orElseThrow());
+        route.setArrivalAirport(airportsRepository.findById(routesDTO.getArrivalAirport()).orElseThrow());
+        route.setDistance(routesDTO.getDistance());
+        route.setFlightTime(routesDTO.getFlightTime());
         routesRepository.save(route);
-        return route.getId();
+        return route;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/routes")
-    public String putRoute(@RequestBody Routes newRoute) {
-        Response response = new Response();
+    public Routes putRoute(@RequestBody RoutesDTO routeDTO) {
         try {
-            Routes route = routesRepository.findById(newRoute.getId()).orElseThrow();
-            if (newRoute.getDepartureAirport() != null) {
-                route.setDepartureAirport(newRoute.getDepartureAirport());
+            Routes route = routesRepository.findById(routeDTO.getId()).orElseThrow();
+            if (routeDTO.getDepartureAirport() != null) {
+                route.setDepartureAirport(airportsRepository.findById(routeDTO.getDepartureAirport()).orElseThrow());
             }
-            if (newRoute.getArrivalAirport() != null) {
-                route.setArrivalAirport(newRoute.getArrivalAirport());
+            if (routeDTO.getArrivalAirport() != null) {
+                route.setArrivalAirport(airportsRepository.findById(routeDTO.getArrivalAirport()).orElseThrow());
             }
-            if (newRoute.getDistance() != null) {
-                route.setDistance(newRoute.getDistance());
+            if (routeDTO.getDistance() != null) {
+                route.setDistance(routeDTO.getDistance());
             }
-            if (newRoute.getFlightTime() != null) {
-                route.setFlightTime(newRoute.getFlightTime());
+            if (routeDTO.getFlightTime() != null) {
+                route.setFlightTime(routeDTO.getFlightTime());
             }
             routesRepository.save(route);
-            response.setStatus("OK");
-            return response.getStatus();
+            return route;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/routes/{id}")
-    public String deleteRoute(@PathVariable(value = "id") int id) {
-        Response response = new Response();
+    public Routes deleteRoute(@PathVariable(value = "id") int id) {
         try {
             Routes route = routesRepository.findById(id).orElseThrow();
             routesRepository.delete(route);
-            response.setStatus("OK");
-            return response.getStatus();
+            return route;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 }

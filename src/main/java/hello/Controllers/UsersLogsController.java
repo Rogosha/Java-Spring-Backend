@@ -1,7 +1,8 @@
 package hello.Controllers;
 
 import hello.Models.UsersLogs;
-import hello.Repositories.UsersInfoRepository;
+import hello.Models.UsersLogsDTO;
+import hello.Repositories.UsersLogsRepository;
 import hello.Repositories.UsersRepository;
 import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @RestController
 public class UsersLogsController {
     @Autowired
-    private UsersInfoRepository usersLogsRepository;
+    private UsersLogsRepository usersLogsRepository;
 
     @Autowired
     private UsersRepository usersRepository;
@@ -31,53 +32,58 @@ public class UsersLogsController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/userslogs")
-    public Integer postUserLogs(@RequestBody UsersLogs usersLogs) {
-        usersLogsRepository.save(usersLogs);
-        return usersLogs.getId();
+    public UsersLogs postUserLogs(@RequestBody UsersLogsDTO userLogsDTO) {
+        UsersLogs userLogs = new UsersLogs();
+        userLogs.setUser(usersRepository.findById(userLogsDTO.getUser()).orElseThrow());
+        userLogs.setLogInTime(userLogsDTO.getLogInTime());
+        userLogs.setLogOutTime(userLogsDTO.getLogOutTime());
+        userLogs.setCrashReason(userLogsDTO.getCrashReason());
+        userLogs.setSoftwareCrash(userLogsDTO.getSoftwareCrash());
+        userLogs.setSystemCrash(userLogsDTO.getSystemCrash());
+        usersLogsRepository.save(userLogs);
+        return userLogs;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/userslogs/")
-    public String putUserLogs(@RequestBody UsersLogs newUserLogs) {
+    public UsersLogs putUserLogs(@RequestBody UsersLogsDTO userLogsDTO) {
         Response response = new Response();
         try {
-            UsersLogs userLogs = usersLogsRepository.findById(newUserLogs.getId()).orElseThrow();
-            if (newUserLogs.getLogInTime() != null) {
-                userLogs.setLogInTime(newUserLogs.getLogInTime());
+            UsersLogs userLogs = usersLogsRepository.findById(userLogsDTO.getId()).orElseThrow();
+            if (userLogsDTO.getUser() != null){
+                userLogs.setUser(usersRepository.findById(userLogsDTO.getUser()).orElseThrow());
             }
-            if (newUserLogs.getLogOutTime() != null) {
-                userLogs.setLogOutTime(newUserLogs.getLogOutTime());
+            if (userLogsDTO.getLogInTime() != null) {
+                userLogs.setLogInTime(userLogsDTO.getLogInTime());
             }
-            if (newUserLogs.getCrashReason() != null) {
-                userLogs.setCrashReason(newUserLogs.getCrashReason());
+            if (userLogsDTO.getLogOutTime() != null) {
+                userLogs.setLogOutTime(userLogsDTO.getLogOutTime());
             }
-            if (newUserLogs.getSoftwareCrash() != null) {
-                userLogs.setSoftwareCrash(newUserLogs.getSoftwareCrash());
+            if (userLogsDTO.getCrashReason() != null) {
+                userLogs.setCrashReason(userLogsDTO.getCrashReason());
             }
-            if (newUserLogs.getSystemCrash() != null) {
-                userLogs.setSystemCrash(newUserLogs.getSystemCrash());
+            if (userLogsDTO.getSoftwareCrash() != null) {
+                userLogs.setSoftwareCrash(userLogsDTO.getSoftwareCrash());
+            }
+            if (userLogsDTO.getSystemCrash() != null) {
+                userLogs.setSystemCrash(userLogsDTO.getSystemCrash());
             }
             usersLogsRepository.save(userLogs);
-            response.setStatus("OK");
-            return response.getStatus();
+            return userLogs;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/userslogs/{id}")
-    public String deleteUserLogs(@PathVariable(value = "id") int id) {
-        Response response = new Response();
+    public UsersLogs deleteUserLogs(@PathVariable(value = "id") int id) {
         try {
-            UsersLogs userInfo = usersLogsRepository.findById(id).orElseThrow();
-            usersLogsRepository.delete(userInfo);
-            response.setStatus("OK");
-            return response.getStatus();
+            UsersLogs userLogs = usersLogsRepository.findById(id).orElseThrow();
+            usersLogsRepository.delete(userLogs);
+            return userLogs;
         } catch (Exception e) {
-            response.setStatus("NOT_OK");
-            return response.getStatus();
+            return null;
         }
     }
 }

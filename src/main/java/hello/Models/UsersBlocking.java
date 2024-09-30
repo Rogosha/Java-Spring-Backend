@@ -2,8 +2,6 @@ package hello.Models;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "usersblocking")
 public class UsersBlocking {
@@ -12,7 +10,7 @@ public class UsersBlocking {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "UserID", referencedColumnName = "id", unique = true, nullable = false)
+    @JoinColumn(name = "User", referencedColumnName = "id", unique = true, nullable = false)
     private Users user;
 
     @Column(name = "BlockingReason", length = 200)

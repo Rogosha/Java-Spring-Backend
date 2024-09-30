@@ -1,7 +1,6 @@
 package hello.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -85,4 +84,5 @@ public class Airports {
 
     public Airports() {
     }
+
 }
