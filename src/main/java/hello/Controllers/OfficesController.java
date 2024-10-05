@@ -44,7 +44,7 @@ public class OfficesController {
         return office;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/offices")
     public Offices putOffice(@RequestBody OfficesDTO officeDTO) {
         try {
@@ -68,7 +68,7 @@ public class OfficesController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/offices/{id}")
     public Offices deleteOffice(@PathVariable(value = "id") int id) {
         try {

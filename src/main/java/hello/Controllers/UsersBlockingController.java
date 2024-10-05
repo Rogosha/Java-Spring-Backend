@@ -17,13 +17,13 @@ public class UsersBlockingController {
     @Autowired
     private UsersRepository usersRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/usersblocking")
     public Iterable<UsersBlocking> getCountries() {
         return usersBlockingRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/usersblocking/{id}")
     public Optional<UsersBlocking> getCountry(@PathVariable(value = "id") int id) {
         return usersBlockingRepository.findById(id);
@@ -41,7 +41,7 @@ public class UsersBlockingController {
         return usersBlocking;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/usersblocking")
     public UsersBlocking putCountry(@RequestBody UsersBlockingDTO userBlockingDTO) {
         try {
@@ -59,7 +59,7 @@ public class UsersBlockingController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/usersblocking/{id}")
     public UsersBlocking deleteCountry(@PathVariable(value = "id") int id) {
         try {

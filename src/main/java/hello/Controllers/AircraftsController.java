@@ -15,26 +15,26 @@ public class AircraftsController {
     @Autowired
     private AircraftsRepository aircraftsRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/aircrafts")
     public Iterable<Aircrafts> getAircrafts() {
         return aircraftsRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/aircrafts/{id}")
     public Optional<Aircrafts> getAircraft(@PathVariable(value = "id") int id) {
         return aircraftsRepository.findById(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/aircrafts")
     public Aircrafts postAircraft(@RequestBody Aircrafts aircraft) {
         aircraftsRepository.save(aircraft);
         return aircraft;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/aircrafts")
     public Aircrafts putAircraft(@RequestBody Aircrafts newAircraft) {
         try {
@@ -62,7 +62,7 @@ public class AircraftsController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/aircrafts/{id}")
     public Aircrafts deleteAircraft(@PathVariable(value = "id") int id) {
         try {

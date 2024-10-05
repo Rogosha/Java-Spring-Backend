@@ -26,19 +26,19 @@ public class SchedulesController {
     @Autowired
     private AirportsRepository airportsRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/schedules")
     public Iterable<Schedules> getSchedules() {
         return schedulesRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/schedules/{id}")
     public Optional<Schedules> getSchedule(@PathVariable(value = "id") int id) {
         return schedulesRepository.findById(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/schedules")
     public Schedules postSchedule(@RequestBody SchedulesDTO scheduleDTO) {
         Schedules schedule = new Schedules();
@@ -53,7 +53,7 @@ public class SchedulesController {
         return schedule;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/schedules")
     public Schedules putSchedule(@RequestBody SchedulesDTO scheduleDTO) {
         try {
@@ -86,7 +86,7 @@ public class SchedulesController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/schedules/{id}")
     public Schedules deleteSchedule(@PathVariable(value = "id") int id) {
         try {
@@ -98,7 +98,7 @@ public class SchedulesController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/schedules/update")
     public Schedules updateSchedule(@RequestBody SchedulesUpdateDTO[] schedulesUpdateDTO) {
         Schedules schedules = null;
@@ -123,7 +123,7 @@ public class SchedulesController {
         }
         return null;
     }
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/schedules/search")
     public Schedules[][] searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
         Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();

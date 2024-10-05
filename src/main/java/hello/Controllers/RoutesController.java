@@ -18,19 +18,19 @@ public class RoutesController {
     private AirportsRepository airportsRepository;
 
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/routes")
     public Iterable<Routes> getRoute() {
         return routesRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/routes/{id}")
     public Optional<Routes> getRoute(@PathVariable(value = "id") int id) {
         return routesRepository.findById(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/routes")
     public Routes postRoute(@RequestBody RoutesDTO routesDTO) {
         Routes route = new Routes();
@@ -42,7 +42,7 @@ public class RoutesController {
         return route;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/routes")
     public Routes putRoute(@RequestBody RoutesDTO routeDTO) {
         try {
@@ -66,7 +66,7 @@ public class RoutesController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/routes/{id}")
     public Routes deleteRoute(@PathVariable(value = "id") int id) {
         try {

@@ -24,19 +24,19 @@ public class TicketsController {
     @Autowired
     private CountriesRepository countriesRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/tickets")
     public Iterable<Tickets> getTickets() {
         return ticketsRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/tickets/{id}")
     public Optional<Tickets> getTickets(@PathVariable(value = "id") int id) {
         return ticketsRepository.findById(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/tickets")
     public Tickets postTickets(@RequestBody TicketsDTO ticketsDTO) {
         Tickets tickets = new Tickets();
@@ -55,7 +55,7 @@ public class TicketsController {
         return tickets;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/tickets")
     public Tickets putTickets(@RequestBody TicketsDTO ticketsDTO) {
         try {
@@ -100,7 +100,7 @@ public class TicketsController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/tickets/{id}")
     public Tickets deleteTickets(@PathVariable(value = "id") int id) {
         try {

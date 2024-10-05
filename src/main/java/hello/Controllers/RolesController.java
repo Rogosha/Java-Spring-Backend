@@ -13,14 +13,14 @@ public class RolesController {
     @Autowired
     private RolesRepository rolesRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/roles")
     public Iterable<Roles> getRoles() {
         Iterable<Roles> roles = rolesRepository.findAll();
         return roles;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/roles/{id}")
     public Optional<Roles> getRole(@PathVariable(value = "id") int id) {
         Optional<Roles> role = rolesRepository.findById(id);

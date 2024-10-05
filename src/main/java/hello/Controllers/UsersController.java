@@ -30,13 +30,13 @@ public class UsersController {
     @Autowired
     private OfficesRepository officesRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/users")
     public Iterable<Users> getUsers() {
         return usersRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/users/{id}")
     public Optional<Users> getUser(@PathVariable(value = "id") int id) {
         return usersRepository.findById(id);
@@ -82,7 +82,7 @@ public class UsersController {
 
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/users")
     public Users postUser(@RequestBody UsersDTO userDTO) {
         Users user = new Users();
@@ -98,7 +98,7 @@ public class UsersController {
         return user;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/users")
     public Users putUser(@RequestBody UsersDTO userDTO) {
         try {
@@ -135,7 +135,7 @@ public class UsersController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/users/{id}")
     public Users deleteUser(@PathVariable(value = "id") int id) {
         try {

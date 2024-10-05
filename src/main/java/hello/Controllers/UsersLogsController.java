@@ -43,7 +43,7 @@ public class UsersLogsController {
         return userLogs;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PutMapping("/userslogs")
     public UsersLogs putUserLogs(@RequestBody UsersLogsDTO userLogsDTO) {
         try {
@@ -73,7 +73,7 @@ public class UsersLogsController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @DeleteMapping("/userslogs/{id}")
     public UsersLogs deleteUserLogs(@PathVariable(value = "id") int id) {
         try {

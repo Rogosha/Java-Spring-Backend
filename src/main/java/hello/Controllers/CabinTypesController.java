@@ -13,26 +13,26 @@ public class CabinTypesController {
     @Autowired
     private CabinTypesRepository cabinTypesRepository;
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/cabintypes")
     public Iterable<CabinTypes> getCabinTypes() {
         return cabinTypesRepository.findAll();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/cabintypes/{id}")
     public Optional<CabinTypes> getCabinTypes(@PathVariable(value = "id") int id) {
         return cabinTypesRepository.findById(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/cabintypes")
     public CabinTypes postCabinTypes(@RequestBody CabinTypes cabinTypes) {
         cabinTypesRepository.save(cabinTypes);
         return cabinTypes;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/cabintypes")
     public CabinTypes putCabinTypes(@RequestBody CabinTypes newCabinType) {
         try {
@@ -47,7 +47,7 @@ public class CabinTypesController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/cabintypes/{id}")
     public CabinTypes deleteCabinTypes(@PathVariable(value = "id") int id) {
         try {
