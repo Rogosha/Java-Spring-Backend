@@ -45,7 +45,7 @@ public class UsersLogsController {
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @PutMapping("/userslogs/")
+    @PutMapping("/userslogs")
     public UsersLogs putUserLogs(@RequestBody UsersLogsDTO userLogsDTO) {
         Response response = new Response();
         try {

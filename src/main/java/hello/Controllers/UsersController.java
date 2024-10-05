@@ -45,38 +45,35 @@ public class UsersController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/users/verify")
     public Response verifyUser(@RequestBody Users newUser) {
-        Users[] users = ArrayOf.Users(usersRepository.findAll());
-        Users user = null;
-        for (Users userTemp : users) {
-            if (userTemp.getEmail().equals(newUser.getEmail())) user = userTemp;
-        }
-
-        UsersBlocking[] usersBlockings = ArrayOf.UsersBlocking(usersBlockingRepository.findAll());
-        UsersBlocking usersBlocking = null;
-        for (UsersBlocking userBlockingTemp : usersBlockings) {
-            if (userBlockingTemp.getUser() == user) {
-                usersBlocking = userBlockingTemp;
-            }
-        }
-
         Response response = new Response();
-        if (user != null) {
-            if (user.getPassword().equals(getHash.getH(newUser.getPassword()))) {
-                if (usersBlocking == null || usersBlocking.getBlockingReason() == null) {
-                    response.setStatus("ACCESS ACCEPT");
-                    return response;
-                } else {
-                    response.setStatus("ACCESS DENIED: " + usersBlocking.getBlockingReason());
-                    return response;
-                }
-            } else {
-                response.setStatus("INCORRECT PASSWORD");
-                return response;
-            }
-        } else {
+
+        Users user = null;
+        try{
+            user = usersRepository.findByEmail(newUser.getEmail()).orElseThrow();
+        } catch (Exception e){
             response.setStatus("USER NOT FOUND");
             return response;
         }
+
+        UsersBlocking usersBlocking = null;
+        try{
+            usersBlocking = usersBlockingRepository.findByUser(user).orElseThrow();
+        } catch (Exception _){
+
+        }
+        if (user.getPassword().equals(getHash.getH(newUser.getPassword()))) {
+            if (usersBlocking == null || usersBlocking.getBlockingReason() == null) {
+                response.setStatus("ACCESS ACCEPT");
+                return response;
+            } else {
+                response.setStatus("ACCESS DENIED: " + usersBlocking.getBlockingReason());
+                return response;
+            }
+        } else {
+            response.setStatus("INCORRECT PASSWORD");
+            return response;
+        }
+
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
@@ -85,7 +82,7 @@ public class UsersController {
         Users user = new Users();
         user.setRole(rolesRepository.findById(userDTO.getRole()).orElseThrow());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(getHash.getH(userDTO.getPassword()));
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getFirstName());
         user.setOffice(officesRepository.findById(userDTO.getOffice()).orElseThrow());

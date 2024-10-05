@@ -1,9 +1,10 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "schedules")
@@ -34,6 +35,10 @@ public class Schedules {
 
     @Column(name = "Confirmed", nullable = false)
     private Boolean confirmed;
+
+    @OneToMany(mappedBy = "schedule")
+    @JsonIgnore
+    private List<Tickets> tickets;
 
     public int getId() {
         return id;
@@ -95,6 +100,8 @@ public class Schedules {
         this.confirmed = confirmed;
     }
 
+
+
     public Schedules(LocalDate date, LocalTime time, Aircrafts aircraft, Routes route, String flightNumber, Double economyPrice, Boolean confirmed) {
         this.date = date;
         this.time = time;
@@ -107,4 +114,5 @@ public class Schedules {
 
     public Schedules() {
     }
+
 }
