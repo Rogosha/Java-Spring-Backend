@@ -6,14 +6,9 @@ import hello.Repositories.AircraftsRepository;
 import hello.Repositories.AirportsRepository;
 import hello.Repositories.RoutesRepository;
 import hello.Repositories.SchedulesRepository;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.context.support.SimpleTheme;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +56,6 @@ public class SchedulesController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/schedules")
     public Schedules putSchedule(@RequestBody SchedulesDTO scheduleDTO) {
-        Response response = new Response();
         try {
             Schedules schedule = schedulesRepository.findById(scheduleDTO.getId()).orElseThrow();
             if (scheduleDTO.getDate() != null) {
@@ -95,7 +89,6 @@ public class SchedulesController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/schedules/{id}")
     public Schedules deleteSchedule(@PathVariable(value = "id") int id) {
-        Response response = new Response();
         try {
             Schedules schedule = schedulesRepository.findById(id).orElseThrow();
             schedulesRepository.delete(schedule);

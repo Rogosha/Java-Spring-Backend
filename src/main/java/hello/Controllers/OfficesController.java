@@ -4,7 +4,6 @@ import hello.Models.Offices;
 import hello.Models.OfficesDTO;
 import hello.Repositories.CountriesRepository;
 import hello.Repositories.OfficesRepository;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +71,6 @@ public class OfficesController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/offices/{id}")
     public Offices deleteOffice(@PathVariable(value = "id") int id) {
-        Response response = new Response();
         try {
             Offices office = officesRepository.findById(id).orElseThrow();
             officesRepository.delete(office);

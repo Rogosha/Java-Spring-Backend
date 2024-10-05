@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 public class UsersController {
+
     @Autowired
     private UsersRepository usersRepository;
 
@@ -28,7 +29,6 @@ public class UsersController {
 
     @Autowired
     private OfficesRepository officesRepository;
-
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/users")
@@ -46,13 +46,14 @@ public class UsersController {
     @PostMapping("/users/verify")
     public Response verifyUser(@RequestBody Users newUser) {
         Response response = new Response();
-
         Users user = null;
         try{
             user = usersRepository.findByEmail(newUser.getEmail()).orElseThrow();
         } catch (Exception e){
-            response.setStatus("USER NOT FOUND");
-            return response;
+            //USER NOT FOUND
+            response.setStatus("NOT FOUND");
+            response.setUser(null);
+            return null;
         }
 
         UsersBlocking usersBlocking = null;
@@ -63,13 +64,18 @@ public class UsersController {
         }
         if (user.getPassword().equals(getHash.getH(newUser.getPassword()))) {
             if (usersBlocking == null || usersBlocking.getBlockingReason() == null) {
+                response.setUser(user);
                 response.setStatus("ACCESS ACCEPT");
                 return response;
             } else {
-                response.setStatus("ACCESS DENIED: " + usersBlocking.getBlockingReason());
+                //ACCESS DENIED
+                response.setStatus("user blocking because" + usersBlocking.getBlockingReason());
+                response.setUser(user);
                 return response;
             }
         } else {
+            //INCORRECT PASSWORD
+            response.setUser(user);
             response.setStatus("INCORRECT PASSWORD");
             return response;
         }

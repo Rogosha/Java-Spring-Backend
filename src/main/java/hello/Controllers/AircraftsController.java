@@ -4,7 +4,6 @@ import hello.Models.Aircrafts;
 import hello.Models.Users;
 import hello.Other.getHash;
 import hello.Repositories.AircraftsRepository;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class AircraftsController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/aircrafts")
     public Aircrafts putAircraft(@RequestBody Aircrafts newAircraft) {
-        Response response = new Response();
         try {
             Aircrafts aircraft = aircraftsRepository.findById(newAircraft.getId()).orElseThrow();
 

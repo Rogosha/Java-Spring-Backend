@@ -2,7 +2,6 @@ package hello.Controllers;
 
 import hello.Models.*;
 import hello.Repositories.*;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +58,6 @@ public class TicketsController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/tickets")
     public Tickets putTickets(@RequestBody TicketsDTO ticketsDTO) {
-        Response response = new Response();
         try {
             Tickets tickets = ticketsRepository.findById(ticketsDTO.getId()).orElseThrow();
             if (ticketsDTO.getUser() != null) {
@@ -105,7 +103,6 @@ public class TicketsController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @DeleteMapping("/tickets/{id}")
     public Tickets deleteTickets(@PathVariable(value = "id") int id) {
-        Response response = new Response();
         try {
             Tickets tickets = ticketsRepository.findById(id).orElseThrow();
             ticketsRepository.delete(tickets);

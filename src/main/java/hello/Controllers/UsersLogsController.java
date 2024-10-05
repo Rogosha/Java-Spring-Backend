@@ -4,7 +4,6 @@ import hello.Models.UsersLogs;
 import hello.Models.UsersLogsDTO;
 import hello.Repositories.UsersLogsRepository;
 import hello.Repositories.UsersRepository;
-import hello.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,6 @@ public class UsersLogsController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PutMapping("/userslogs")
     public UsersLogs putUserLogs(@RequestBody UsersLogsDTO userLogsDTO) {
-        Response response = new Response();
         try {
             UsersLogs userLogs = usersLogsRepository.findById(userLogsDTO.getId()).orElseThrow();
             if (userLogsDTO.getUser() != null){
