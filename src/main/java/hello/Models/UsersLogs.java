@@ -18,7 +18,7 @@ public class UsersLogs {
     @Column(name = "LogInTime", nullable = false)
     private LocalDateTime logInTime;
 
-    @Column(name = "LogOutTime", nullable = false)
+    @Column(name = "LogOutTime")
     private LocalDateTime logOutTime;
 
     @Column(name = "CrashReason", length = 200)

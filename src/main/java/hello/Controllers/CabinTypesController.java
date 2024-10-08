@@ -1,7 +1,6 @@
 package hello.Controllers;
 
 import hello.Models.CabinTypes;
-import hello.Models.Countries;
 import hello.Repositories.CabinTypesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

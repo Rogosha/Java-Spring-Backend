@@ -1,8 +1,6 @@
 package hello.Controllers;
 
 import hello.Models.Aircrafts;
-import hello.Models.Users;
-import hello.Other.getHash;
 import hello.Repositories.AircraftsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

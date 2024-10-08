@@ -1,5 +1,6 @@
 package hello.Controllers;
 
+import hello.Models.Users;
 import hello.Models.UsersBlocking;
 import hello.Models.UsersBlockingDTO;
 import hello.Repositories.UsersBlockingRepository;
@@ -26,7 +27,7 @@ public class UsersBlockingController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/usersblocking/{id}")
     public Optional<UsersBlocking> getCountry(@PathVariable(value = "id") int id) {
-        return usersBlockingRepository.findById(id);
+        return usersBlockingRepository.findByUser(usersRepository.findById(id).orElseThrow());
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})

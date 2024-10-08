@@ -9,6 +9,8 @@ import hello.Repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,19 +127,20 @@ public class SchedulesController {
     }
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/schedules/search")
-    public Schedules[][] searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
+    public Deque<Deque<Schedules>> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
         Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
         Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
 
         int i = 0;
-        Schedules[][] schedules = new Schedules[1000][3];
+        Deque<Deque<Schedules>> schedules = new ArrayDeque<>();
         if (routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport,arrivalAirport) != null) {
             try {
                 Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
                 if (schedulesRepository.findByRouteAndDate(route, schedulesUpdateDTO.getDate()) != null) {
                     for (Schedules schedulesTemp : schedulesRepository.findByRouteAndDate(route, schedulesUpdateDTO.getDate())) {
-                        schedules[i][0] = schedulesTemp;
-                        i++;
+                        Deque<Schedules> dequeTemp = new ArrayDeque<>();
+                        dequeTemp.add(schedulesTemp);
+                        schedules.add(dequeTemp);
                     }
                 }
             } catch (Exception _) {
@@ -157,9 +160,12 @@ public class SchedulesController {
                    for (Schedules schedulesTemp : departSchedules){
                        for (Schedules schedulesTemp2: arriSchedules){
                            if (schedulesTemp.getTime().plusMinutes(schedulesTemp.getRoute().getFlightTime()).isBefore(schedulesTemp2.getTime())) {
-                               schedules[i][0] = schedulesTemp;
-                               schedules[i][1] = schedulesTemp2;
-                               i++;
+                               Deque<Schedules> dequeTemp = new ArrayDeque<>();
+                               dequeTemp.add(schedulesTemp);
+                               dequeTemp.add(schedulesTemp2);
+
+                               schedules.add(dequeTemp);
+                               break;
                            }
                        }
                    }

@@ -1,5 +1,6 @@
 package hello.Controllers;
 
+import hello.Models.UserAndBlockingDTO;
 import hello.Models.Users;
 import hello.Models.UsersBlocking;
 import hello.Models.UsersDTO;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import hello.Other.getHash;
 
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class UsersController {
@@ -32,14 +33,32 @@ public class UsersController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/users")
-    public Iterable<Users> getUsers() {
-        return usersRepository.findAll();
+    public Deque<UserAndBlockingDTO> getUsers() {
+        Iterable<UserAndBlockingDTO> userAndBlockingDTO;
+        Deque<UserAndBlockingDTO> users = new ArrayDeque<>();
+        for (Users userTemp : usersRepository.findAll()){
+            UserAndBlockingDTO user = new UserAndBlockingDTO();
+            try {
+                user.setUserBlocking(usersBlockingRepository.findByUser(userTemp).orElseThrow());
+            } catch (NoSuchElementException e){
+                user.setUserBlocking(null);
+            }
+            user.userSetter(userTemp);
+            users.add(user);
+        }
+        return users;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/users/{id}")
     public Optional<Users> getUser(@PathVariable(value = "id") int id) {
         return usersRepository.findById(id);
+    }
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
+    @GetMapping("/users/office/{id}")
+    public Iterable<Users> getUserByOffice(@PathVariable(value = "id") int id) {
+        return usersRepository.findByOffice(officesRepository.findById(id).orElseThrow());
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
@@ -69,7 +88,7 @@ public class UsersController {
                 return response;
             } else {
                 //ACCESS DENIED
-                response.setStatus("user blocking because" + usersBlocking.getBlockingReason());
+                response.setStatus(usersBlocking.getBlockingReason());
                 response.setUser(user);
                 return response;
             }

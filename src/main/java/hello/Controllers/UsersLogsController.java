@@ -1,13 +1,17 @@
 package hello.Controllers;
 
+import hello.Models.Users;
 import hello.Models.UsersLogs;
 import hello.Models.UsersLogsDTO;
+import hello.Other.Container;
 import hello.Repositories.UsersLogsRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
 
 @RestController
 public class UsersLogsController {
@@ -25,8 +29,37 @@ public class UsersLogsController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/userslogs/{id}")
-    public Optional<UsersLogs> getUserLogs(@PathVariable(value = "id") int id) {
-        return usersLogsRepository.findById(id);
+    public Container getUserLogs(@PathVariable(value = "id") int id) {
+        Users user = usersRepository.findById(id).orElseThrow();
+        LocalDateTime timespend = LocalDateTime.of(0, 1, 1, 0, 0, 0);
+        for (UsersLogs usersLogsTemp: usersLogsRepository.findByUser(user)){
+
+            if (usersLogsTemp.getLogOutTime() != null){
+                LocalDateTime betweenTemp = usersLogsTemp.getLogOutTime();
+                betweenTemp = betweenTemp.minusYears(usersLogsTemp.getLogInTime().getYear());
+                betweenTemp = betweenTemp.minusMonths(usersLogsTemp.getLogInTime().getMonthValue());
+                betweenTemp = betweenTemp.minusDays(usersLogsTemp.getLogInTime().getDayOfMonth());
+                betweenTemp = betweenTemp.minusHours(usersLogsTemp.getLogInTime().getHour());
+                betweenTemp = betweenTemp.minusMinutes(usersLogsTemp.getLogInTime().getMinute());
+                betweenTemp = betweenTemp.minusSeconds(usersLogsTemp.getLogInTime().getSecond());
+                betweenTemp = betweenTemp.minusNanos(usersLogsTemp.getLogInTime().getNano());
+
+                timespend = timespend.plusYears(betweenTemp.getYear());
+                timespend = timespend.plusMonths(betweenTemp.getMonthValue());
+                timespend = timespend.plusDays(betweenTemp.getDayOfMonth());
+                timespend = timespend.plusHours(betweenTemp.getHour());
+                timespend = timespend.plusMinutes(betweenTemp.getMinute());
+                timespend = timespend.plusSeconds(betweenTemp.getSecond());
+                timespend = timespend.plusNanos(betweenTemp.getNano());
+
+            }
+
+        }
+
+        Container container = new Container();
+        container.setUsersLogs(usersLogsRepository.findByUser(user));
+        container.setTimeSpend(timespend);
+        return container;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
@@ -66,6 +99,7 @@ public class UsersLogsController {
             if (userLogsDTO.getSystemCrash() != null) {
                 userLogs.setSystemCrash(userLogsDTO.getSystemCrash());
             }
+
             usersLogsRepository.save(userLogs);
             return userLogs;
         } catch (Exception e) {
