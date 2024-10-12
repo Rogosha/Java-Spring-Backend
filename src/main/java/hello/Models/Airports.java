@@ -25,6 +25,10 @@ public class Airports {
     @JsonIgnore
     private List<Routes> departureRoutes;
 
+    @OneToMany(mappedBy = "departureAirport")
+    @JsonIgnore
+    private List<Surveys> surveys;
+
     @OneToMany(mappedBy = "arrivalAirport")
     @JsonIgnore
     private List<Routes> arrivalRoutes;

@@ -1,4 +1,4 @@
-package hello.Models;
+package hello.Models.DTOs;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

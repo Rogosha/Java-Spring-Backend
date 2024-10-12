@@ -1,4 +1,4 @@
-package hello.Models;
+package hello.Models.DTOs;
 
 public class RoutesDTO {
     private int id;

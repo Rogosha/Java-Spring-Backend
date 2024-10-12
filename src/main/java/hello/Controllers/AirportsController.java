@@ -1,7 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.Airports;
-import hello.Models.AirportsDTO;
+import hello.Models.DTOs.AirportsDTO;
 import hello.Repositories.AirportsRepository;
 import hello.Repositories.CountriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;

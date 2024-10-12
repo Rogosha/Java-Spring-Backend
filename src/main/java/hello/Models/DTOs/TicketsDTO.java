@@ -1,6 +1,4 @@
-package hello.Models;
-
-import jakarta.persistence.*;
+package hello.Models.DTOs;
 
 public class TicketsDTO {
     private int id;

@@ -1,7 +1,8 @@
 package hello.Controllers;
 
 import hello.Models.*;
-import hello.Other.ArrayOf;
+import hello.Models.DTOs.SchedulesDTO;
+import hello.Models.DTOs.SchedulesUpdateDTO;
 import hello.Repositories.AircraftsRepository;
 import hello.Repositories.AirportsRepository;
 import hello.Repositories.RoutesRepository;
@@ -9,10 +10,7 @@ import hello.Repositories.SchedulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class SchedulesController {
@@ -106,12 +104,21 @@ public class SchedulesController {
         Schedules schedules = null;
         for (int i = 0; i < schedulesUpdateDTO.length; i++) {
             Schedules schedule = null;
-            if (schedulesUpdateDTO[i].getAction().equals("ADD")) {
-                schedule = new Schedules();
-                schedule.setDate(schedulesUpdateDTO[i].getDate());
-                schedule.setFlightNumber(schedulesUpdateDTO[i].getFlightNumber());
+            Optional<Schedules> scheduleTemp = schedulesRepository.findByFlightNumberAndDate(schedulesUpdateDTO[i].getFlightNumber(), schedulesUpdateDTO[i].getDate());
+            if (schedulesUpdateDTO[i].getAction().equals("ADD") && !scheduleTemp.isPresent()) {
+                if (!scheduleTemp.isPresent()) {
+                    schedule = new Schedules();
+                    schedule.setDate(schedulesUpdateDTO[i].getDate());
+                    schedule.setFlightNumber(schedulesUpdateDTO[i].getFlightNumber());
+                }
+            } else if (schedulesUpdateDTO[i].getAction().equals("EDIT") && scheduleTemp.isPresent()) {
+                if (!scheduleTemp.isPresent()) {
+                    schedule = scheduleTemp.orElseThrow();
+                    schedule.setDate(schedulesUpdateDTO[i].getDate());
+                    schedule.setFlightNumber(schedulesUpdateDTO[i].getFlightNumber());
+                }
             } else {
-                schedule = schedulesRepository.findByFlightNumberAndDate(schedulesUpdateDTO[i].getFlightNumber(), schedulesUpdateDTO[i].getDate()).orElseThrow();
+                throw new NoSuchElementException("No value present");
             }
             schedule.setTime(schedulesUpdateDTO[i].getTime());
             Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO[i].getDepartureAirport()).orElseThrow();

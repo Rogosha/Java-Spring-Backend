@@ -2,16 +2,14 @@ package hello.Controllers;
 
 import hello.Models.Users;
 import hello.Models.UsersLogs;
-import hello.Models.UsersLogsDTO;
+import hello.Models.DTOs.UsersLogsDTO;
 import hello.Other.Container;
 import hello.Repositories.UsersLogsRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 
 @RestController
 public class UsersLogsController {

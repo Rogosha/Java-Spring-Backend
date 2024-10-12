@@ -1,10 +1,9 @@
 package hello.Controllers;
 
-import hello.Models.UserAndBlockingDTO;
+import hello.Models.DTOs.UserAndBlockingDTO;
 import hello.Models.Users;
 import hello.Models.UsersBlocking;
-import hello.Models.UsersDTO;
-import hello.Other.ArrayOf;
+import hello.Models.DTOs.UsersDTO;
 import hello.Repositories.OfficesRepository;
 import hello.Repositories.RolesRepository;
 import hello.Repositories.UsersBlockingRepository;

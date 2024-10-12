@@ -20,6 +20,10 @@ public class CabinTypes {
     @JsonIgnore
     private List<Tickets> tickets;
 
+    @OneToMany(mappedBy = "cabinType")
+    @JsonIgnore
+    private List<Surveys> surveys;
+
     public CabinTypes(String name, List<Tickets> tickets) {
         this.name = name;
         this.tickets = tickets;

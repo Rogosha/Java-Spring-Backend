@@ -1,7 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.Offices;
-import hello.Models.OfficesDTO;
+import hello.Models.DTOs.OfficesDTO;
 import hello.Repositories.CountriesRepository;
 import hello.Repositories.OfficesRepository;
 import org.springframework.beans.factory.annotation.Autowired;

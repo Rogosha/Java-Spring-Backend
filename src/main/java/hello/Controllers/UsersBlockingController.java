@@ -1,8 +1,7 @@
 package hello.Controllers;
 
-import hello.Models.Users;
 import hello.Models.UsersBlocking;
-import hello.Models.UsersBlockingDTO;
+import hello.Models.DTOs.UsersBlockingDTO;
 import hello.Repositories.UsersBlockingRepository;
 import hello.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;

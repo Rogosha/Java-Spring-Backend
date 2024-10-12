@@ -1,12 +1,9 @@
 package hello.Repositories;
 
-import hello.Models.Airports;
 import hello.Models.Routes;
 import hello.Models.Schedules;
-import hello.Models.SchedulesDTO;
 import org.springframework.data.repository.CrudRepository;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 

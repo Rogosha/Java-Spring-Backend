@@ -1,6 +1,4 @@
-package hello.Models;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
+package hello.Models.DTOs;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,6 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.*;
+import hello.Models.DTOs.TicketsDTO;
 import hello.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

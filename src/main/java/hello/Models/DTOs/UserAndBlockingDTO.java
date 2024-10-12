@@ -1,11 +1,11 @@
-package hello.Models;
+package hello.Models.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import hello.Models.Offices;
+import hello.Models.Roles;
+import hello.Models.Users;
+import hello.Models.UsersBlocking;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class UserAndBlockingDTO {
     private int id;
@@ -27,6 +27,7 @@ public class UserAndBlockingDTO {
     private Boolean active;
 
     public void userSetter(Users users){
+        this.id = users.getId();
         this.role = users.getRole();
         this.email = users.getEmail();
         this.firstName = users.getFirstName();
@@ -48,6 +49,10 @@ public class UserAndBlockingDTO {
     }
 
     public UserAndBlockingDTO() {
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
