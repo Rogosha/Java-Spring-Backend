@@ -30,7 +30,7 @@ public class SchedulesUpdateDTO {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.flightNumber = flightNumber;
-        aircraft = aircraft;
+        this.aircraft = aircraft;
         this.economyPrice = economyPrice;
         this.confirmed = confirmed;
     }

@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface RoutesRepository extends CrudRepository<Routes, Integer> {
     Optional<Routes> findByDepartureAirportAndArrivalAirport(Airports departureAirport, Airports arrivalAirport);
-    List<Routes> findByDepartureAirport(Airports departureAirport);
-    List<Routes> findByArrivalAirport(Airports arrivalAirport);
+    Iterable<Routes> findByDepartureAirport(Airports departureAirport);
+    Iterable<Routes> findByArrivalAirport(Airports arrivalAirport);
 }

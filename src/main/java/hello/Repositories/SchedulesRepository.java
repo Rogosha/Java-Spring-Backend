@@ -11,4 +11,6 @@ public interface SchedulesRepository extends CrudRepository<Schedules, Integer> 
     Optional<Schedules> findByFlightNumberAndDate (String flightNumber, LocalDate date);
     Iterable<Schedules> findByRouteAndDate(Routes routes, LocalDate date);
     Iterable<Schedules> findByRoute(Routes routes);
+    Iterable<Schedules> findByDate(LocalDate date);
+
 }

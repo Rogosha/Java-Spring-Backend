@@ -106,35 +106,124 @@ public class SchedulesController {
             Schedules schedule = null;
             Optional<Schedules> scheduleTemp = schedulesRepository.findByFlightNumberAndDate(schedulesUpdateDTO[i].getFlightNumber(), schedulesUpdateDTO[i].getDate());
             if (schedulesUpdateDTO[i].getAction().equals("ADD") && !scheduleTemp.isPresent()) {
-                if (!scheduleTemp.isPresent()) {
                     schedule = new Schedules();
                     schedule.setDate(schedulesUpdateDTO[i].getDate());
                     schedule.setFlightNumber(schedulesUpdateDTO[i].getFlightNumber());
-                }
             } else if (schedulesUpdateDTO[i].getAction().equals("EDIT") && scheduleTemp.isPresent()) {
-                if (!scheduleTemp.isPresent()) {
-                    schedule = scheduleTemp.orElseThrow();
-                    schedule.setDate(schedulesUpdateDTO[i].getDate());
-                    schedule.setFlightNumber(schedulesUpdateDTO[i].getFlightNumber());
-                }
+                schedule = scheduleTemp.orElseThrow();
             } else {
                 throw new NoSuchElementException("No value present");
             }
-            schedule.setTime(schedulesUpdateDTO[i].getTime());
-            Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO[i].getDepartureAirport()).orElseThrow();
-            Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO[i].getArrivalAirport()).orElseThrow();
-            Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
-            schedule.setRoute(route);
-            schedule.setAircraft(aircraftsRepository.findById(schedulesUpdateDTO[i].getAircraft()).orElseThrow());
-            schedule.setEconomyPrice(schedulesUpdateDTO[i].getEconomyPrice());
-            schedule.setConfirmed(schedulesUpdateDTO[i].getConfirmed().equals("OK"));
-            schedulesRepository.save(schedule);
+            if (schedule != null) {
+                schedule.setTime(schedulesUpdateDTO[i].getTime());
+                Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO[i].getDepartureAirport()).orElseThrow();
+                Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO[i].getArrivalAirport()).orElseThrow();
+                Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
+                schedule.setRoute(route);
+                schedule.setAircraft(aircraftsRepository.findById(schedulesUpdateDTO[i].getAircraft()).orElseThrow());
+                schedule.setEconomyPrice(schedulesUpdateDTO[i].getEconomyPrice());
+                schedule.setConfirmed(schedulesUpdateDTO[i].getConfirmed().equals("OK"));
+                schedulesRepository.save(schedule);
+            }
         }
         return null;
     }
+//    {
+//        "date":	"2017-10-04",           - дата вылета
+//        "departureAirport": "DOH",      - аэропорт вылета
+//        "arrivalAirport": "BAH" -       - aэропорт прибытия
+//    }
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
+    @GetMapping("/schedules/search")
+    public Deque<Schedules> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
+        Deque<Schedules> schedulesDeque = new ArrayDeque<>();
+        Iterable<Schedules> schedulesIterable;
+        if (schedulesUpdateDTO.getDate() != null){
+            if (schedulesUpdateDTO.getDepartureAirport() != null) {
+                if (schedulesUpdateDTO.getArrivalAirport() != null) {
+                    Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
+                    Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
+                    Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
+                    schedulesIterable = schedulesRepository.findByRouteAndDate(route,schedulesUpdateDTO.getDate());
+                } else {
+                    Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
+                    Iterable<Routes> routes = routesRepository.findByDepartureAirport(departureAirport);
+                    Deque<Schedules> deque = new ArrayDeque<>();
+                    for (Routes routeTemp : routes){
+                        schedulesIterable = schedulesRepository.findByRouteAndDate(routeTemp ,schedulesUpdateDTO.getDate());
+                        for (Schedules scheduleTemp: schedulesIterable){
+                            deque.add(scheduleTemp);
+                        }
+                    }
+                    schedulesIterable = deque;
+                }
+            } else {
+                if (schedulesUpdateDTO.getArrivalAirport() != null) {
+                    Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
+                    Iterable<Routes> routes = routesRepository.findByArrivalAirport(arrivalAirport);
+                    Deque<Schedules> deque = new ArrayDeque<>();
+                    for (Routes routeTemp : routes){
+                        schedulesIterable = schedulesRepository.findByRouteAndDate(routeTemp ,schedulesUpdateDTO.getDate());
+                        for (Schedules scheduleTemp: schedulesIterable){
+                            deque.add(scheduleTemp);
+                        }
+                    }
+                    schedulesIterable = schedulesRepository.findByDate(schedulesUpdateDTO.getDate());
+                } else {
+                    schedulesIterable = schedulesRepository.findByDate(schedulesUpdateDTO.getDate());
+                }
+            }
+        } else {
+            if (schedulesUpdateDTO.getDepartureAirport() != null) {
+                if (schedulesUpdateDTO.getArrivalAirport() != null) {
+                    Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
+                    Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
+                    Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
+                    schedulesIterable = schedulesRepository.findByRoute(route);
+                } else {
+                    Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
+                    Iterable<Routes> routes = routesRepository.findByDepartureAirport(departureAirport);
+                    Deque<Schedules> deque = new ArrayDeque<>();
+                    for (Routes routeTemp : routes){
+                        schedulesIterable = schedulesRepository.findByRoute(routeTemp);
+                        for (Schedules scheduleTemp: schedulesIterable){
+                            deque.add(scheduleTemp);
+                        }
+                    }
+                    schedulesIterable = deque;
+                }
+            } else {
+                if (schedulesUpdateDTO.getArrivalAirport() != null) {
+                    Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
+                    Iterable<Routes> routes = routesRepository.findByArrivalAirport(arrivalAirport);
+
+                    Deque<Schedules> deque = new ArrayDeque<>();
+                    for (Routes routeTemp : routes){
+                        schedulesIterable = schedulesRepository.findByRoute(routeTemp);
+                        for (Schedules scheduleTemp: schedulesIterable){
+                            deque.add(scheduleTemp);
+                        }
+                    }
+
+                    schedulesIterable = deque;
+                } else {
+                    schedulesIterable = schedulesRepository.findAll();
+                }
+            }
+        }
+        if (schedulesUpdateDTO.getFlightNumber() != null){
+            for (Schedules schedulesTemp : schedulesIterable) {
+                if (schedulesTemp.getFlightNumber().equals(schedulesUpdateDTO.getFlightNumber())) {
+                    schedulesDeque.add(schedulesTemp);
+                }
+            }
+        }
+        return schedulesDeque;
+    }
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @PostMapping("/schedules/search")
-    public Deque<Deque<Schedules>> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
+    public Deque<Deque<Schedules>> searchRoutes(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
         Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
         Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
 
@@ -155,8 +244,8 @@ public class SchedulesController {
             }
         }
 
-        List<Routes> fromDepartureAirport = routesRepository.findByDepartureAirport(departureAirport);
-        List<Routes> toArrivalAirport = routesRepository.findByArrivalAirport(arrivalAirport);
+        Iterable<Routes> fromDepartureAirport = routesRepository.findByDepartureAirport(departureAirport);
+        Iterable<Routes> toArrivalAirport = routesRepository.findByArrivalAirport(arrivalAirport);
 
         for(Routes departRoute: fromDepartureAirport){
            for (Routes arriRoute: toArrivalAirport){

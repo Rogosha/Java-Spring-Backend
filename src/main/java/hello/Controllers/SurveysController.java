@@ -2,15 +2,13 @@ package hello.Controllers;
 
 import hello.Models.DTOs.SurveysDTO;
 import hello.Models.Surveys;
-import hello.Other.Counter;
-import hello.Other.FullCounter;
+import hello.Other.Finder;
 import hello.Repositories.AirportsRepository;
 import hello.Repositories.CabinTypesRepository;
 import hello.Repositories.SurveysRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @RestController
@@ -42,75 +40,92 @@ public class SurveysController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/surveys/reports")
-    public Counter getSurveyByDateAndYear(@RequestBody SurveysDTO date) {
+    public Map<String, Integer> getSurveyByDateAndYear(@RequestBody SurveysDTO date) {
         Iterable<Surveys> surveys = surveysRepository.findByYearAndMonth(date.getYear(), date.getMonth());
-        Map<String, Integer> destinationAirport = new HashMap<>();
-        Counter counterOfAll = new Counter(surveys);
-        return counterOfAll;
+        Map<String, Integer> variableOfAnswer = new HashMap<>();
+        for (Surveys survey : surveys ){
+            if (survey.getGender()) {
+                variableOfAnswer.put("Male",variableOfAnswer.getOrDefault("Male",0) + 1);
+            } else{
+                variableOfAnswer.put("Female",variableOfAnswer.getOrDefault("Female",0) + 1);
+            }
+
+            if ((survey.getAge() > 17) && (survey.getAge() < 25)) {
+                variableOfAnswer.put("18-24",variableOfAnswer.getOrDefault("18-24",0) + 1);
+            } else if ((survey.getAge() > 24) && (survey.getAge() < 40)) {
+                variableOfAnswer.put("25-39",variableOfAnswer.getOrDefault("25-39",0) + 1);
+            } else if ((survey.getAge() > 39) && (survey.getAge() < 60)) {
+                variableOfAnswer.put("40-59",variableOfAnswer.getOrDefault("40-59",0) + 1);
+            } else if ((survey.getAge() > 59)) {
+                variableOfAnswer.put("60+",variableOfAnswer.getOrDefault("60+",0) + 1);
+            }
+
+            if (survey.getCabinType().getName().equals("Economy")){
+                variableOfAnswer.put("Economy",variableOfAnswer.getOrDefault("Economy",0) + 1);
+            } else if (survey.getCabinType().getName().equals("Business")){
+                variableOfAnswer.put("Business",variableOfAnswer.getOrDefault("Business",0) + 1);
+            } else if (survey.getCabinType().getName().equals("First")){
+                variableOfAnswer.put("FirstClass",variableOfAnswer.getOrDefault("FirstClass",0) + 1);
+            }
+
+            variableOfAnswer.put(   survey.getDepartureAirport().getIATACode(),
+                    variableOfAnswer.getOrDefault(survey.getDepartureAirport()
+                            .getIATACode(),0) + 1);
+        }
+        return variableOfAnswer;
     }
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @GetMapping("/surveys/fullreports")
-    public Deque<FullCounter> getSurveyByDateAndYearFull(@RequestBody SurveysDTO date) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public Map<Integer, Map<Integer, Map<String, Integer>>> getSurveyByDateAndYearFull(@RequestBody SurveysDTO date){
 
+        Map<Integer, Map<Integer, Map<String, Integer>>> report = new HashMap<>();
+        for (int i = 0; i < 4; i++) {
+            Map<Integer, Map<String, Integer>> question = new HashMap<>();
+            for (int j = 1; j < 8; j++) {
+                Iterable<Surveys> surveys = Finder.questionFinder(surveysRepository, i+1, j, date.getYear(), date.getMonth());
+                Map<String, Integer> variableOfAnswer = new HashMap<>();
+                for (Surveys survey : surveys ){
+                    if (survey.getGender()) {
+                        variableOfAnswer.put("Male",variableOfAnswer.getOrDefault("Male",0) + 1);
+                    } else if (!survey.getGender()){
+                        variableOfAnswer.put("Female",variableOfAnswer.getOrDefault("Female",0) + 1);
+                    }
 
-        Map<String, Map<String, Map<String, Integer>>> report = new HashMap<>();
+                    if ((survey.getAge() > 17) && (survey.getAge() < 25)) {
+                        variableOfAnswer.put("18-24",variableOfAnswer.getOrDefault("18-24",0) + 1);
+                    } else if ((survey.getAge() > 24) && (survey.getAge() < 40)) {
+                        variableOfAnswer.put("25-39",variableOfAnswer.getOrDefault("25-39",0) + 1);
+                    } else if ((survey.getAge() > 39) && (survey.getAge() < 60)) {
+                        variableOfAnswer.put("40-59",variableOfAnswer.getOrDefault("40-59",0) + 1);
+                    } else if ((survey.getAge() > 59)) {
+                        variableOfAnswer.put("60+",variableOfAnswer.getOrDefault("60+",0) + 1);
+                    }
 
-        Map<String, Map<String, Integer>> question = new HashMap<>();
+                    if (survey.getCabinType().getName().equals("Economy")){
+                        variableOfAnswer.put("Economy",variableOfAnswer.getOrDefault("Economy",0) + 1);
+                    } else if (survey.getCabinType().getName().equals("Business")){
+                        variableOfAnswer.put("Business",variableOfAnswer.getOrDefault("Business",0) + 1);
+                    } else if (survey.getCabinType().getName().equals("First")){
+                        variableOfAnswer.put("FirstClass",variableOfAnswer.getOrDefault("FirstClass",0) + 1);
+                    }
 
-        Map<String, Integer> variableOfAnswer = new HashMap<>();
-
-        String[] methodNames = {"findByYearAndMonthAndQ1", "findByYearAndMonthAndQ2", "findByYearAndMonthAndQ3", "findByYearAndMonthAndQ4"};
-
-        Deque<FullCounter> fullReport = new ArrayDeque<>();
-
-        FullCounter Q1 = new FullCounter();
-        Q1.setOutstanding(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 7)));
-        Q1.setVeryGood(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 6)));
-        Q1.setGood(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 5)));
-        Q1.setAdequate(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 4)));
-        Q1.setNeedsImprovements(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 3)));
-        Q1.setPoor(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 2)));
-        Q1.setDontNot(new Counter(surveysRepository.findByYearAndMonthAndQ1(date.getYear(),date.getMonth(), 1)));
-        fullReport.add(Q1);
-
-        FullCounter Q2 = new FullCounter();
-        Q2.setOutstanding(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 7)));
-        Q2.setVeryGood(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 6)));
-        Q2.setGood(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 5)));
-        Q2.setAdequate(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 4)));
-        Q2.setNeedsImprovements(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 3)));
-        Q2.setPoor(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 2)));
-        Q2.setDontNot(new Counter(surveysRepository.findByYearAndMonthAndQ2(date.getYear(),date.getMonth(), 1)));
-        fullReport.add(Q2);
-
-        FullCounter Q3 = new FullCounter();
-        Q3.setOutstanding(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 7)));
-        Q3.setVeryGood(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 6)));
-        Q3.setGood(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 5)));
-        Q3.setAdequate(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 4)));
-        Q3.setNeedsImprovements(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 3)));
-        Q3.setPoor(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 2)));
-        Q3.setDontNot(new Counter(surveysRepository.findByYearAndMonthAndQ3(date.getYear(),date.getMonth(), 1)));
-        fullReport.add(Q3);
-
-        FullCounter Q4 = new FullCounter();
-        Q4.setOutstanding(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 7)));
-        Q4.setVeryGood(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 6)));
-        Q4.setGood(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 5)));
-        Q4.setAdequate(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 4)));
-        Q4.setNeedsImprovements(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 3)));
-        Q4.setPoor(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 2)));
-        Q4.setDontNot(new Counter(surveysRepository.findByYearAndMonthAndQ4(date.getYear(),date.getMonth(), 1)));
-        fullReport.add(Q4);
-
-        return fullReport;
+                    variableOfAnswer.put(   survey.getDepartureAirport().getIATACode(),
+                                            variableOfAnswer.getOrDefault(survey.getDepartureAirport()
+                                                                                .getIATACode(),0) + 1);
+                }
+                question.put(j, variableOfAnswer);
+            }
+            report.put(1, question);
+        }
+        return report;
     }
 
 
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/surveys")
-    public Surveys postSu4veys(@RequestBody Iterable<SurveysDTO> surveysDTO) {
+    public Surveys postSurveys(@RequestBody Iterable<SurveysDTO> surveysDTO) {
         for (SurveysDTO surveyDTO : surveysDTO) {
             Surveys survey = new Surveys();
             if (surveyDTO.getMonth() != null){
@@ -129,7 +144,7 @@ public class SurveysController {
                 survey.setAge(surveyDTO.getAge());
             }
             if (surveyDTO.getGender() != null){
-                if (surveyDTO.getGender().equals("M")){
+                if (surveyDTO.getGender()){
                     survey.setGender(true);
                 } else
                     survey.setGender(false);
