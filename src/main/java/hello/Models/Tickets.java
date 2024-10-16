@@ -1,6 +1,9 @@
 package hello.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tickets")
@@ -27,9 +30,6 @@ public class Tickets {
     @Column(name = "Lastname", length = 50, nullable = false)
     private String lastName;
 
-    @Column(name = "Email", length = 50)
-    private String email;
-
     @Column(name = "Phone", length = 14, nullable = false)
     private String phone;
 
@@ -46,13 +46,17 @@ public class Tickets {
     @Column(name = "Confirmed", nullable = false)
     private Boolean confirmed;
 
-    public Tickets(Users user, Schedules schedule, CabinTypes cabinType, String firstName, String lastName, String email, String phone, String passportNumber, Countries country, String bookingReference, Boolean confirmed) {
+
+    @OneToMany(mappedBy = "tickets")
+    @JsonIgnore
+    private List<AmenitiesTickets> amenitiesTickets;
+
+    public Tickets(Users user, Schedules schedule, CabinTypes cabinType, String firstName, String lastName, String phone, String passportNumber, Countries country, String bookingReference, Boolean confirmed) {
         this.user = user;
         this.schedule = schedule;
         this.cabinType = cabinType;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.phone = phone;
         this.passportNumber = passportNumber;
         this.country = country;
@@ -105,14 +109,6 @@ public class Tickets {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone() {

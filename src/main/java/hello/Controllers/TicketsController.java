@@ -46,7 +46,6 @@ public class TicketsController {
         tickets.setCabinType(cabinTypesRepository.findById(ticketsDTO.getCabinType()).orElseThrow());
         tickets.setFirstName(ticketsDTO.getFirstName());
         tickets.setLastName(ticketsDTO.getLastName());
-        tickets.setEmail(ticketsDTO.getEmail());
         tickets.setPhone(ticketsDTO.getPhone());
         tickets.setPassportNumber(ticketsDTO.getPassportNumber());
         tickets.setCountry(countriesRepository.findById(ticketsDTO.getCountry()).orElseThrow());
@@ -76,9 +75,7 @@ public class TicketsController {
             if (ticketsDTO.getLastName() != null) {
                 tickets.setLastName(ticketsDTO.getLastName());
             }
-            if (ticketsDTO.getEmail() != null) {
-                tickets.setEmail(ticketsDTO.getEmail());
-            }
+
             if (ticketsDTO.getPhone() != null) {
                 tickets.setPhone(ticketsDTO.getPhone());
             }

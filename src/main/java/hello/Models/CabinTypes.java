@@ -24,6 +24,10 @@ public class CabinTypes {
     @JsonIgnore
     private List<Surveys> surveys;
 
+    @OneToMany(mappedBy = "cabinType")
+    @JsonIgnore
+    private List<AmenitiesCabinType> amenitiesCabinTypes ;
+
     public CabinTypes(String name, List<Tickets> tickets) {
         this.name = name;
         this.tickets = tickets;

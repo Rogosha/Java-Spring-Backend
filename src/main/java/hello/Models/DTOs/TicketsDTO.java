@@ -13,8 +13,6 @@ public class TicketsDTO {
 
     private String lastName;
 
-    private String email;
-
     private String phone;
 
     private String passportNumber;
@@ -25,14 +23,13 @@ public class TicketsDTO {
 
     private Boolean confirmed;
 
-    public TicketsDTO(int id, Integer user, Integer schedule, Integer cabinType, String firstName, String lastName, String email, String phone, String passportNumber, Integer country, String bookingReference, Boolean confirmed) {
+    public TicketsDTO(int id, Integer user, Integer schedule, Integer cabinType, String firstName, String lastName, String phone, String passportNumber, Integer country, String bookingReference, Boolean confirmed) {
         this.id = id;
         this.user = user;
         this.schedule = schedule;
         this.cabinType = cabinType;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.phone = phone;
         this.passportNumber = passportNumber;
         this.country = country;
@@ -65,10 +62,6 @@ public class TicketsDTO {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPhone() {

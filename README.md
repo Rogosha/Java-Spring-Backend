@@ -30,7 +30,7 @@
         "name": "Abu Dhabi",     
         "iatacode": "AUH"     
     }     
-#### Запросы>
+#### Запросы
 >
 >GET /airports - возвращает массив объектов
 >
@@ -41,6 +41,53 @@
 >PUT /airports - редактирует объект, имеющийся в базе данных (выбор редактируемого осуществляется по id)б возвращает изменённый объект или null при ошибке
 >
 >DELETE /airports/{id} - удаляет объект по id, возвращает удалённый объект
+### Amenities
+#### Объект:
+    {
+        "id": 1,
+        "service": "Extra Blanket",
+        "price": 10.0
+    }
+#### Запросы
+>GET /amenities - возвращает массив объектов
+> 
+>GET /amenities/ - возвращает один объект по  его id
+### AmenitiesTickets
+#### Объект:
+    {
+        "amenities": { AMENITIES },
+        "tickets": { TICKETS },
+        "price": 5.0
+    }
+#### Запросы
+>
+> У AmenitiesTickets составной id, это по тз, составляется из amenities и tickets. Изменение и удаление только произойдёт успешно только в объектах с этими полями
+> 
+>GET /amenitiestickets - возвращает массив объектов
+>
+>GET /amenitiestickets/{bookingReference} - возвращает один все дополнительные услуги по его номеру бронирования билета
+>
+>POST /amenitiestickets - помещает в базу данных переданный объект, возвращает помещённый объект
+>
+>PUT /amenitiestickets - редактирует объект, имеющийся в базе данных, возвращает изменённый объект или null при ошибке
+>
+>DELETE /amenitiestickets - удаляет объект, возвращает удалённый объект
+
+### AmenitiesCabinType
+#### Объект:
+    {
+        "amenities": {
+            "id": 1,
+            "service": "Extra Blanket",
+            "price": 10.0
+        },
+        "cabinType": {
+            "id": 2,
+            "name": "Business"
+        }
+    },
+#### Запросы
+>GET /amenitiescabintypes - возвращает массив объектов
 
 ### CabinTypes
 #### Объект:
@@ -52,7 +99,7 @@
 >
 >GET /cabintypes - возвращает массив объектов
 >
->GET /cabintypes/{id} - возвращает один объект по  его id
+>GET /cabintypes/{id
 >
 >POST /cabintypes - помещает в базу данных переданный объект (переданный объект не должен содержать id), возвращает помещённый объект
 >
@@ -287,14 +334,3 @@
 >PUT /userslogs - редактирует объект, имеющийся в базе данных (выбор редактируемого осуществляется по id)б возвращает изменённый объект или null при ошибке
 >
 >DELETE /userslogs/{id} - удаляет объект по id, возвращает удалённый объект
-
-## COMING SOON
-
-### Amenities
-#### Объект:
-
-### AmenitiesTIckets
-#### Объект:
-
-### AmenitiesCabinType
-#### Объект:
