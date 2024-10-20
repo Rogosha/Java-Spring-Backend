@@ -12,7 +12,7 @@
     <groupId>com.example</groupId>
     <artifactId>backspring</artifactId>
     <packaging>jar</packaging>
-    <version>3.0</version>
+    <version>5.0</version>
     <name>rest-service-initial</name>
     <description>Demo project for Spring Boot</description>
     <properties>

@@ -108,7 +108,7 @@ public class UsersController {
         user.setEmail(userDTO.getEmail());
         user.setPassword(getHash.getH(userDTO.getPassword()));
         user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         user.setOffice(officesRepository.findById(userDTO.getOffice()).orElseThrow());
         user.setBirthdate(userDTO.getBirthdate());
         user.setActive(userDTO.getActive());

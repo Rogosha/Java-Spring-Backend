@@ -1,6 +1,7 @@
 package hello.Controllers;
 
 import hello.Models.*;
+import hello.Models.DTOs.AmenitiesAndTicketsDTO;
 import hello.Models.DTOs.TicketsDTO;
 import hello.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class TicketsController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/tickets/{id}")
-    public Optional<Tickets> getTickets(@PathVariable(value = "id") int id) {
-        return ticketsRepository.findById(id);
+    public Iterable<Tickets> getTickets(@PathVariable(value = "id") String id) {
+        return ticketsRepository.findByBookingReference(id);
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})

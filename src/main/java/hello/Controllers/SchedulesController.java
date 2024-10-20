@@ -135,16 +135,15 @@ public class SchedulesController {
 //    }
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
     @GetMapping("/schedules/search")
-    public Deque<Schedules> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
-        Deque<Schedules> schedulesDeque = new ArrayDeque<>();
+    public Iterable<Schedules> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
         Iterable<Schedules> schedulesIterable;
         if (schedulesUpdateDTO.getDate() != null){
             if (schedulesUpdateDTO.getDepartureAirport() != null) {
                 if (schedulesUpdateDTO.getArrivalAirport() != null) {
                     Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
                     Airports arrivalAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getArrivalAirport()).orElseThrow();
-                    Routes route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport).orElseThrow();
-                    schedulesIterable = schedulesRepository.findByRouteAndDate(route,schedulesUpdateDTO.getDate());
+                    Optional<Routes> route = routesRepository.findByDepartureAirportAndArrivalAirport(departureAirport, arrivalAirport);
+                    schedulesIterable = schedulesRepository.findByRouteAndDate(route.get(),schedulesUpdateDTO.getDate());
                 } else {
                     Airports departureAirport = airportsRepository.findByIATACode(schedulesUpdateDTO.getDepartureAirport()).orElseThrow();
                     Iterable<Routes> routes = routesRepository.findByDepartureAirport(departureAirport);
@@ -211,14 +210,7 @@ public class SchedulesController {
                 }
             }
         }
-        if (schedulesUpdateDTO.getFlightNumber() != null){
-            for (Schedules schedulesTemp : schedulesIterable) {
-                if (schedulesTemp.getFlightNumber().equals(schedulesUpdateDTO.getFlightNumber())) {
-                    schedulesDeque.add(schedulesTemp);
-                }
-            }
-        }
-        return schedulesDeque;
+        return schedulesIterable;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})

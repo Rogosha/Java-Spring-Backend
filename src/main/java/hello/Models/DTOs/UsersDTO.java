@@ -13,7 +13,7 @@ public class UsersDTO {
 
     private String firstName;
 
-    private String LastName;
+    private String lastName;
 
     private Integer office;
 
@@ -27,7 +27,7 @@ public class UsersDTO {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
-        LastName = lastName;
+        this.lastName = lastName;
         this.office = office;
         this.birthdate = birthdate;
         this.active = active;
@@ -57,7 +57,7 @@ public class UsersDTO {
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public Integer getOffice() {

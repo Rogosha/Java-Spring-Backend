@@ -31,7 +31,7 @@ public class UserAndBlockingDTO {
         this.role = users.getRole();
         this.email = users.getEmail();
         this.firstName = users.getFirstName();
-        this.lastName = users.getFirstName();
+        this.lastName = users.getLastName();
         this.office = users.getOffice();
         this.birthdate = users.getBirthdate();
         this.active = users.getActive();
