@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class AmenitiesTickets {
 
     @EmbeddedId
-    private AmenityTicketsId amenityTicketsId;
+    private AmenityTicketsId Id;
 
     @ManyToOne
     @MapsId("amenityId")
@@ -25,10 +25,15 @@ public class AmenitiesTickets {
     @Column(name = "Price", nullable = false, columnDefinition = "0")
     private Double price;
 
-    public AmenitiesTickets(Amenities amenities, Tickets tickets, Double price) {
+    public AmenitiesTickets(AmenityTicketsId amenityTicketsId, Amenities amenities, Tickets tickets, Double price) {
+        this.Id = amenityTicketsId;
         this.amenities = amenities;
         this.tickets = tickets;
         this.price = price;
+    }
+
+    public AmenitiesTickets(AmenityTicketsId id) {
+        Id = id;
     }
 
     public AmenitiesTickets() {

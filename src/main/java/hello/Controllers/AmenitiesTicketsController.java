@@ -1,8 +1,10 @@
 package hello.Controllers;
 
+import hello.Models.Amenities;
 import hello.Models.AmenitiesTickets;
 import hello.Models.DTOs.AmenitiesTicketsDTO;
 import hello.Models.DTOs.SchedulesUpdateDTO;
+import hello.Models.EmbeddedIds.AmenityTicketsId;
 import hello.Models.Tickets;
 import hello.Repositories.AmenitiesRepository;
 import hello.Repositories.AmenitiesTicketsRepository;
@@ -46,13 +48,21 @@ public class AmenitiesTicketsController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.POST, RequestMethod.OPTIONS})
     @PostMapping("/amenitiestickets")
     public AmenitiesTickets postAmenities(@RequestBody AmenitiesTicketsDTO amenitiesTicketsDTO) {
-        AmenitiesTickets amenitiesTickets = new AmenitiesTickets();
+
+        AmenityTicketsId amenityTicketsId = new AmenityTicketsId(amenitiesTicketsDTO.getAmenities(), amenitiesTicketsDTO.getTickets());
+
+        AmenitiesTickets amenitiesTickets = new AmenitiesTickets(amenityTicketsId);
+
         amenitiesTickets.setTickets(ticketsRepository.findById(amenitiesTicketsDTO.getTickets()).orElseThrow());
+
+        amenitiesTickets.setAmenities(amenitiesRepository.findById(amenitiesTicketsDTO.getAmenities()).orElseThrow());
+
         if (amenitiesTicketsDTO.getPrice() != null) {
             amenitiesTickets.setPrice(amenitiesTicketsDTO.getPrice());
         } else amenitiesTickets.setPrice(amenitiesTickets.getAmenities().getPrice());
-        amenitiesTickets.setAmenities(amenitiesRepository.findById(amenitiesTicketsDTO.getAmenities()).orElseThrow());
+
         amenitiesTicketsRepository.save(amenitiesTickets);
+
         return amenitiesTickets;
     }
 
@@ -60,7 +70,9 @@ public class AmenitiesTicketsController {
     @PutMapping("/amenitiestickets")
     public AmenitiesTickets putAmenities(@RequestBody AmenitiesTicketsDTO amenitiesTicketsDTO) {
         try {
-            AmenitiesTickets amenitiesTickets = new AmenitiesTickets();
+            AmenityTicketsId amenityTicketsId = new AmenityTicketsId(amenitiesTicketsDTO.getAmenities(), amenitiesTicketsDTO.getTickets());
+
+            AmenitiesTickets amenitiesTickets = new AmenitiesTickets(amenityTicketsId);
 
             if (amenitiesTicketsDTO.getTickets() != null){
                 amenitiesTickets.setTickets(ticketsRepository.findById(amenitiesTicketsDTO.getTickets()).orElseThrow());
@@ -82,10 +94,9 @@ public class AmenitiesTicketsController {
     @DeleteMapping("/amenitiestickets")
     public AmenitiesTickets deleteAmenities(@RequestBody AmenitiesTicketsDTO amenitiesTicketsDTO) {
         try {
-            AmenitiesTickets amenitiesTickets = new AmenitiesTickets();
-            amenitiesTickets.setTickets(ticketsRepository.findById(amenitiesTicketsDTO.getTickets()).orElseThrow());
-            amenitiesTickets.setAmenities(amenitiesRepository.findById(amenitiesTicketsDTO.getAmenities()).orElseThrow());
-            amenitiesTickets.setPrice(amenitiesTicketsDTO.getPrice());
+            Tickets ticket = ticketsRepository.findById(amenitiesTicketsDTO.getTickets()).orElseThrow();
+            Amenities amenity = amenitiesRepository.findById(amenitiesTicketsDTO.getAmenities()).orElseThrow();
+            AmenitiesTickets amenitiesTickets = amenitiesTicketsRepository.findByTicketsAndAmenities(ticket, amenity).orElseThrow();
             amenitiesTicketsRepository.delete(amenitiesTickets);
             return amenitiesTickets;
         } catch (Exception e) {
