@@ -124,16 +124,19 @@ public class AmenitiesTicketsController {
                             economyMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     economyMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                                 0) + 1);
+                            break;
                         }
                         case ("Business") :{
                             businessMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     businessMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                             0) + 1);
+                            break;
                         }
                         case ("First Class") :{
                             firstClassMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     firstClassMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                             0) + 1);
+                            break;
                         }
 
                     }
@@ -147,16 +150,19 @@ public class AmenitiesTicketsController {
                             economyMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     economyMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                             0) + 1);
+                            break;
                         }
                         case ("Business") :{
                             businessMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     businessMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                             0) + 1);
+                            break;
                         }
                         case ("First Class") :{
                             firstClassMap.put( amenitiesTicketsTemp.getAmenities().getService(),
                                     firstClassMap.getOrDefault(amenitiesTicketsTemp.getAmenities().getService(),
                                             0) + 1);
+                            break;
                         }
 
                     }

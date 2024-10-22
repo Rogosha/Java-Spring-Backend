@@ -73,7 +73,16 @@
 >
 >DELETE /amenitiestickets - удаляет объект, возвращает удалённый объект
 >
->POST /amenitiestickets/report - отчёт по допуслугам, на вход может получать дату и flightNumber, возвращает чумовую структуру по таблице в тз
+>POST /amenitiestickets/report - отчёт по допуслугам, на вход может получать дату и flightNumber, возвращает чумовую структуру(см. ниже) по таблице в тз
+
+    {
+        "First Class": {},
+        "Economy": {
+            "Extra Blanket": 1,
+            "Premium Headphones Rental": 1
+        },
+        "Business": {}
+    }
 ### AmenitiesCabinType
 #### Объект:
     {
@@ -235,6 +244,36 @@
         ]
     
     ]
+### Surveys
+#### Объект:
+    {
+        "id": 1,
+        "month": 4,
+        "year": 2017,
+        "departureAirport": { AIRPORTS },
+        "arrivalAirport": { AIRPORTS },
+        "age": 52,
+        "gender": (boolean, true - male, false - female)))))))))
+        "cabinType": "Economy" or "Business" or "FirstClass",
+        "q1": from 0 to 7,
+        "q2": 1,
+        "q3": 2,
+        "q4": 3
+    }
+#### Запросы:
+>GET /surveys - возвращает массив объектов
+>
+>GET /surveys/{id} - возвращает объект по id 
+>
+>GET /surveys/reports - возвращает краткий отчёт о количестве в категориях, получая на вход объект с полями "year" и "month"  
+>
+>GET /surveys/fullreports - возвращает полный отчёт, получая на вход объект с полями "year" и "month"
+> 
+>POST /surveys - помещает в базу данных массив переданных объектов (переданный объект не должен содержать id), возвращает пустой объект surveys
+>
+>PUT /tickets - редактирует объект, имеющийся в базе данных (выбор редактируемого осуществляется по id), возвращает изменённый объект или null при ошибке
+>
+>DELETE /tickets/{id} - удаляет объект по id, возвращает удалённый объект
 ### Tickets
 #### Объект:
     {     

@@ -166,7 +166,7 @@ public class SurveysController {
             }
             surveysRepository.save(survey);
         }
-        return null;
+        return new Surveys();
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.DELETE,
