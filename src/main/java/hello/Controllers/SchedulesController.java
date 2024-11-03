@@ -134,7 +134,7 @@ public class SchedulesController {
 //        "arrivalAirport": "BAH" -       - aэропорт прибытия
 //    }
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,  RequestMethod.OPTIONS})
-    @GetMapping("/schedules/search")
+    @PostMapping("/schedules/filter")
     public Iterable<Schedules> searchSchedules(@RequestBody SchedulesUpdateDTO schedulesUpdateDTO){
         Iterable<Schedules> schedulesIterable;
         if (schedulesUpdateDTO.getDate() != null){

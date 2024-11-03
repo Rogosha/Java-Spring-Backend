@@ -12,7 +12,9 @@ import hello.Repositories.TicketsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.*;
+import java.util.stream.*;
 
 @RestController
 public class AmenitiesTicketsController {
@@ -41,6 +43,7 @@ public class AmenitiesTicketsController {
             for (AmenitiesTickets amenitiesTicketsTemp: amenitiesTickets){
                 amenitiesTicketsDeque.add(amenitiesTicketsTemp);
             }
+
         }
         return amenitiesTicketsDeque;
     }
