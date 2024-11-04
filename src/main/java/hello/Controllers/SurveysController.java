@@ -39,7 +39,7 @@ public class SurveysController {
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @GetMapping("/surveys/reports")
+    @PostMapping("/surveys/reports")
     public Map<String, Integer> getSurveyByDateAndYear(@RequestBody SurveysDTO date) {
         Iterable<Surveys> surveys = surveysRepository.findByYearAndMonth(date.getYear(), date.getMonth());
         Map<String, Integer> variableOfAnswer = new HashMap<>();
@@ -76,7 +76,7 @@ public class SurveysController {
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-    @GetMapping("/surveys/fullreports")
+    @PostMapping("/surveys/fullreports")
     public Map<Integer, Map<Integer, Map<String, Integer>>> getSurveyByDateAndYearFull(@RequestBody SurveysDTO date){
 
         Map<Integer, Map<Integer, Map<String, Integer>>> report = new HashMap<>();
